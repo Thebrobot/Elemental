@@ -1,4 +1,4 @@
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { categoryMarkHtml } from "../icons/categoryMarks";
 
 export type ExploreCategory = {
@@ -23,7 +23,7 @@ export default function TreatmentCategoryExplorer({ categories }: Props) {
   const [activeId, setActiveId] = useState(categories[0]?.id ?? "");
   const current = categories.find((c) => c.id === activeId) ?? categories[0];
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const applyHash = () => {
       const fromHash = categoryIdFromHash(window.location.hash, validIds);
       if (fromHash) setActiveId(fromHash);

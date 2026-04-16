@@ -1,7 +1,9 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection } from "astro:content";
 import { siteConfig } from "../../config/siteConfig";
+import { getBlogHeroImage } from "../../data/blogHeroAssets";
 
 const title = `Blog | ${siteConfig.name} - Elkhorn, WI`;
 const description = `Articles on medical aesthetics, skin health, body treatments, and wellness from ${siteConfig.name} in Elkhorn, WI.`;
@@ -37,17 +39,25 @@ const postDateFmt = new Intl.DateTimeFormat("en-US", {
       <h2 id="articles-heading" class="list-heading">Articles</h2>
       <ul class="blog-index-list">
         {
-          posts.map((post) => (
+          posts.map((post) => {
+            const thumb = getBlogHeroImage(post.data.heroImage);
+            return (
             <li class="blog-index-item">
               <a class="blog-index-item__img-link" href={`/blog/${post.id}/`} tabindex="-1" aria-hidden="true">
-                <img
-                  class="blog-index-item__img"
-                  src={post.data.heroImage}
-                  alt=""
-                  width="640"
-                  height="400"
-                  loading="lazy"
-                />
+                {thumb ? (
+                  <Image
+                    class="blog-index-item__img"
+                    src={thumb}
+                    alt=""
+                    width="640"
+                    height="400"
+                    loading="lazy"
+                    formats={["avif", "webp"]}
+                    quality={78}
+                    widths={[280, 400, 560, 640]}
+                    sizes="(min-width: 768px) 280px, 100vw"
+                  />
+                ) : null}
               </a>
               <div class="blog-index-item__body">
                 <time class="blog-index-item__date" datetime={post.data.pubDate.toISOString()}>
@@ -65,7 +75,8 @@ const postDateFmt = new Intl.DateTimeFormat("en-US", {
                 </a>
               </div>
             </li>
-          ))
+          );
+          })
         }
       </ul>
     </div>

@@ -1,6 +1,8 @@
 ---
+import { Image, getImage } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { siteConfig } from "../config/siteConfig";
+import wtsHero from "../assets/images/where-to-start-hero.png";
 import { getTreatmentExplorerCategories } from "../data/treatmentExplorerCategories";
 import {
   categoryLabels,
@@ -46,20 +48,34 @@ const breadcrumbLd = {
     },
   ],
 };
+
+const wtsHeroOg = (
+  await getImage({
+    src: wtsHero,
+    width: 1200,
+    height: 630,
+    format: "jpg",
+    quality: 82,
+  })
+).src;
 ---
 
-<BaseLayout title={title} description={description} jsonLd={breadcrumbLd} ogImage="/images/where-to-start-hero.png">
+<BaseLayout title={title} description={description} jsonLd={breadcrumbLd} ogImage={wtsHeroOg}>
   <section class="wts-hero" aria-labelledby="wts-heading">
     <div class="wts-hero__media" aria-hidden="true">
-      <img
+      <Image
         class="wts-hero__media-img"
-        src="/images/where-to-start-hero.png"
+        src={wtsHero}
         alt=""
-        width="1376"
-        height="768"
+        width={1376}
+        height={768}
         loading="eager"
         fetchpriority="high"
         decoding="async"
+        formats={["avif", "webp"]}
+        quality={78}
+        widths={[640, 960, 1280, 1376]}
+        sizes="100vw"
       />
     </div>
     <div class="wts-hero__scrim" aria-hidden="true"></div>
@@ -228,21 +244,12 @@ const breadcrumbLd = {
   <section class="section section--cream section--textured" id="treatment-browser" aria-labelledby="browser-heading">
     <div class="container">
       <h2 id="browser-heading" class="wts-section-h2">Browse by category</h2>
-      <div class="wts-browser-strip" aria-hidden="true">
-        {
-          pathFeelingByCategory.map((row) => (
-            <span class="wts-browser-strip__chip">
-              <CategoryLineIcon variant={row.cat} loading="lazy" />
-            </span>
-          ))
-        }
-      </div>
       <p class="wts-section-lede">
         Below are Injectables, Skin and laser, Body, and Wellness. Open any treatment for a full guide. If it helps to
         talk it through first,
         <a href="#talk-team">contact our team</a>.
       </p>
-      <TreatmentCategoryExplorer client:load categories={exploreCategories} />
+      <TreatmentCategoryExplorer client:visible categories={exploreCategories} />
     </div>
   </section>
 
@@ -782,38 +789,6 @@ const breadcrumbLd = {
     font-size: 0.98rem;
     line-height: 1.65;
     color: color-mix(in srgb, var(--color-charcoal) 85%, white);
-  }
-
-  .wts-browser-strip {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    gap: var(--space-sm);
-    margin: 0 0 var(--space-md);
-  }
-
-  .wts-browser-strip__chip {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 2.85rem;
-    height: 2.85rem;
-    border-radius: 50%;
-    color: var(--color-teal-muted);
-    background: color-mix(in srgb, var(--color-teal) 9%, var(--color-white));
-    border: 1px solid color-mix(in srgb, var(--color-teal) 16%, var(--color-border-subtle));
-    box-shadow: 0 1px 3px rgb(0 0 0 / 0.04);
-  }
-
-  .wts-browser-strip__chip :global(.category-mark) {
-    width: 1.35rem;
-    height: 1.35rem;
-  }
-
-  .wts-browser-strip__chip :global(.category-mark svg) {
-    width: 100%;
-    height: 100%;
   }
 
   .wts-different {

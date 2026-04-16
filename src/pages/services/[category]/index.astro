@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import { siteConfig } from "../../../config/siteConfig";
 import {
@@ -15,7 +16,7 @@ import {
   getOtherCategoryHubLinks,
 } from "../../../data/categoryHubContent";
 import { getHubBentoPlacements } from "../../../data/hubBentoLayouts";
-import { hubTileImageSrc } from "../../../data/serviceHubBento";
+import { getServiceBentoImage } from "../../../data/serviceHubBento";
 
 function isServiceCategory(value: string): value is ServiceCategory {
   return getHubCategories().includes(value as ServiceCategory);
@@ -117,6 +118,7 @@ const treatmentItemListLd = {
           services.map((s, i) => {
             const cell = hubBentoCells[i]!;
             const bentoVars = `--bento-cs:${cell.colStart};--bento-csp:${cell.colSpan};--bento-rs:${cell.rowStart};--bento-rsp:${cell.rowSpan};`;
+            const tile = getServiceBentoImage(s.slug);
             return (
             <a
               class="cat-hub-bento-card"
@@ -124,15 +126,21 @@ const treatmentItemListLd = {
               aria-label={`${s.name}: full treatment guide`}
               style={bentoVars}
             >
-              <img
-                class="cat-hub-bento-card__img"
-                src={hubTileImageSrc(s)}
-                alt=""
-                width={800}
-                height={600}
-                loading="lazy"
-                decoding="async"
-              />
+              {tile ? (
+                <Image
+                  class="cat-hub-bento-card__img"
+                  src={tile}
+                  alt=""
+                  width={800}
+                  height={600}
+                  loading="lazy"
+                  decoding="async"
+                  formats={["avif", "webp"]}
+                  quality={78}
+                  widths={[400, 600, 800, 1024]}
+                  sizes="(min-width: 1100px) 25vw, (min-width: 640px) 50vw, 100vw"
+                />
+              ) : null}
               <span class="cat-hub-bento-card__scrim" aria-hidden="true" />
               <span class="cat-hub-bento-card__body">
                 <span class="cat-hub-bento-card__title">{s.name}</span>

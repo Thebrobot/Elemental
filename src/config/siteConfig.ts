@@ -25,6 +25,16 @@ export const siteConfig = {
   bookingUrl: "#",
   bookingLabel: "Book online",
 
+  /**
+   * Brand marks: header needs a dark-on-light asset; footer needs a light-on-dark asset.
+   * Do not point both at the same local file unless it is a true dual-purpose export (e.g. SVG).
+   * `public/images/elemental-logo.png` is a large square RGB master and is not suitable as a drop-in for both surfaces.
+   */
+  logoUrlHeader:
+    "https://assets.cdn.filesafe.space/sg6GOaZxcaTTzQL7krbU/media/69dffbdfdb7c222f716c9b32.png",
+  logoUrlFooter:
+    "https://assets.cdn.filesafe.space/sg6GOaZxcaTTzQL7krbU/media/69dffbdfd75d436f5307d862.png",
+
   social: {
     facebook: "",
     instagram: "",

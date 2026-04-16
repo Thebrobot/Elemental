@@ -1,11 +1,20 @@
 ---
+import { Image, getImage } from "astro:assets";
+import type { ImageMetadata } from "astro:assets";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { siteConfig } from "../config/siteConfig";
 import { getTreatmentExplorerCategories } from "../data/treatmentExplorerCategories";
+import { getBlogHeroImage } from "../data/blogHeroAssets";
 import TestimonialCarousel from "../islands/TestimonialCarousel.tsx";
 import HomeFaq from "../islands/HomeFaq.tsx";
 import TreatmentCategoryExplorer from "../islands/TreatmentCategoryExplorer.tsx";
 import { getCollection } from "astro:content";
+import homeHero from "../assets/images/home-hero.png";
+import approachSection from "../assets/images/approach-section.jpg";
+import outcomeInjectables from "../assets/images/home-outcomes/home-outcome-injectables.png";
+import outcomeSkin from "../assets/images/home-outcomes/home-outcome-skin.png";
+import outcomeBody from "../assets/images/home-outcomes/home-outcome-body.png";
+import outcomeWellness from "../assets/images/home-outcomes/home-outcome-wellness.png";
 
 const title = `Med Spa Elkhorn, WI | Injectables, Laser & Wellness | ${siteConfig.name}`;
 const description = siteConfig.description;
@@ -24,37 +33,55 @@ const postDateFmt = new Intl.DateTimeFormat("en-US", {
   day: "numeric",
 });
 
+type OutcomeCard = {
+  title: string;
+  tagline: string;
+  hubHref: string;
+  image: ImageMetadata;
+  ariaLabel: string;
+};
+
 /** Full-bleed photo cards (temporary placeholder photography; replace with brand assets). */
-const outcomePhotoCards = [
+const outcomePhotoCards: OutcomeCard[] = [
   {
     title: "Soften lines & restore volume",
     tagline: "Neuromodulators, fillers & PRP mapped to your face, not a template.",
     hubHref: "/services/injectables/",
-    image: "/images/home-outcomes/home-outcome-injectables.png",
+    image: outcomeInjectables,
     ariaLabel: "Injectables: soften lines and restore volume, browse category",
   },
   {
     title: "Clearer tone & smoother texture",
     tagline: "Facials, peels, IPL & microneedling for your goals and downtime.",
     hubHref: "/services/skin/",
-    image: "/images/home-outcomes/home-outcome-skin.png",
+    image: outcomeSkin,
     ariaLabel: "Skin and laser: clearer tone and smoother texture, browse category",
   },
   {
     title: "Shape, tighten & feel stronger",
     tagline: "Body contouring, tightening, laser hair removal & core support.",
     hubHref: "/services/body/",
-    image: "/images/home-outcomes/home-outcome-body.png",
+    image: outcomeBody,
     ariaLabel: "Body: shape, tighten, and feel stronger, browse category",
   },
   {
     title: "Weight, hormones & whole-person care",
     tagline: "Medical weight loss, BHRT, labs, IV therapies & private consults.",
     hubHref: "/services/wellness/",
-    image: "/images/home-outcomes/home-outcome-wellness.png",
+    image: outcomeWellness,
     ariaLabel: "Wellness: weight, hormones, and whole-person care, browse category",
   },
 ];
+
+const homeHeroOg = (
+  await getImage({
+    src: homeHero,
+    width: 1200,
+    height: 630,
+    format: "jpg",
+    quality: 82,
+  })
+).src;
 
 const testimonialSlides = [
   {
@@ -62,6 +89,36 @@ const testimonialSlides = [
       "The team took time to explain every option and never rushed me. My treatment plan finally feels aligned with my goals.",
     fig: "Elkhorn patient",
     tag: "Medical aesthetics",
+  },
+  {
+    quote:
+      "I was nervous about my first injectable visit. They walked me through what to expect, and the results look natural—friends noticed I looked rested, not 'done.'",
+    fig: "Walworth County guest",
+    tag: "Injectables",
+  },
+  {
+    quote:
+      "After IPL and a peel series, my sun spots and texture are noticeably softer. I appreciate how honest they were about downtime and realistic timelines.",
+    fig: "Lake Geneva area patient",
+    tag: "Skin & laser",
+  },
+  {
+    quote:
+      "The body consult felt thorough—no pressure to stack services I did not need. I left with a clear plan and follow-up that matched my schedule.",
+    fig: "Elkhorn patient",
+    tag: "Body contouring",
+  },
+  {
+    quote:
+      "Hormone and weight conversations were handled with respect and science, not judgment. Check-ins actually happen; I never felt dropped after the first visit.",
+    fig: "Southeast Wisconsin patient",
+    tag: "Wellness",
+  },
+  {
+    quote:
+      "The space is calm, the staff remembers your preferences, and billing questions were answered upfront. That consistency keeps me coming back.",
+    fig: "Returning guest",
+    tag: "Patient experience",
   },
 ];
 
@@ -182,19 +239,23 @@ const faqPageLd = {
   description={description}
   includeLocalBusiness
   jsonLd={faqPageLd}
-  ogImage="/images/home-hero.png"
+  ogImage={homeHeroOg}
 >
   <section class="hero" aria-labelledby="hero-heading">
     <div class="hero__media" aria-hidden="true">
-      <img
+      <Image
         class="hero__media-img"
-        src="/images/home-hero.png"
+        src={homeHero}
         alt=""
-        width="1920"
-        height="1080"
+        width={1920}
+        height={1080}
         loading="eager"
         fetchpriority="high"
         decoding="async"
+        formats={["avif", "webp"]}
+        quality={78}
+        widths={[640, 960, 1280, 1600, 1920]}
+        sizes="100vw"
       />
     </div>
     <div class="hero__scrim" aria-hidden="true"></div>
@@ -235,14 +296,18 @@ const faqPageLd = {
         {
           outcomePhotoCards.map((card) => (
             <a class="outcome-photo-card" href={card.hubHref} aria-label={card.ariaLabel}>
-              <img
+              <Image
                 class="outcome-photo-card__img"
                 src={card.image}
                 alt=""
-                width="600"
-                height="800"
-                loading="eager"
+                width={600}
+                height={800}
+                loading="lazy"
                 decoding="async"
+                formats={["avif", "webp"]}
+                quality={78}
+                widths={[320, 480, 600, 800]}
+                sizes="(min-width: 1100px) 22vw, (min-width: 640px) 45vw, 100vw"
               />
               <span class="outcome-photo-card__scrim" aria-hidden="true" />
               <span class="outcome-photo-card__border-glow" aria-hidden="true" />
@@ -266,7 +331,7 @@ const faqPageLd = {
         <p class="catalog-lede">
           Pick a category to scan all names at once. Each link opens the full treatment guide; the hub adds a one-line preview for everything in that group.
         </p>
-        <TreatmentCategoryExplorer client:load categories={exploreCategories} />
+        <TreatmentCategoryExplorer client:visible categories={exploreCategories} />
       </div>
     </div>
   </section>
@@ -303,14 +368,18 @@ const faqPageLd = {
         </a>
       </div>
       <figure class="approach__visual">
-        <img
+        <Image
           class="approach__img"
-          src="/images/approach-section.jpg"
+          src={approachSection}
           alt="Calm med spa suite with soft daylight, neutral decor, and treatment seating, reflecting a thoughtful, educational visit."
           width={1000}
           height={704}
           loading="lazy"
           decoding="async"
+          formats={["avif", "webp"]}
+          quality={78}
+          widths={[600, 800, 1000]}
+          sizes="(min-width: 900px) 42vw, 100vw"
         />
       </figure>
     </div>
@@ -320,7 +389,7 @@ const faqPageLd = {
     <div class="container">
       <p class="kicker kicker--dark">Testimonials</p>
       <h2 id="testimonials-heading" class="section-h2">What our patients say</h2>
-      <TestimonialCarousel client:load quotes={testimonialSlides} />
+      <TestimonialCarousel client:visible quotes={testimonialSlides} />
     </div>
   </section>
 
@@ -331,17 +400,25 @@ const faqPageLd = {
       <p class="blog-lede">Treatment explainers, skin and laser insights, and wellness updates from our clinical team.</p>
       <div class="blog-card-grid">
         {
-          recentPosts.map((post) => (
+          recentPosts.map((post) => {
+            const blogThumb = getBlogHeroImage(post.data.heroImage);
+            return (
             <article class="blog-preview-card">
               <a class="blog-preview-card__img-link" href={`/blog/${post.id}/`} tabindex="-1" aria-hidden="true">
-                <img
-                  class="blog-preview-card__img"
-                  src={post.data.heroImage}
-                  alt=""
-                  width="640"
-                  height="400"
-                  loading="lazy"
-                />
+                {blogThumb ? (
+                  <Image
+                    class="blog-preview-card__img"
+                    src={blogThumb}
+                    alt=""
+                    width={640}
+                    height={400}
+                    loading="lazy"
+                    formats={["avif", "webp"]}
+                    quality={78}
+                    widths={[320, 480, 640]}
+                    sizes="(min-width: 1100px) 22vw, (min-width: 640px) 45vw, 100vw"
+                  />
+                ) : null}
               </a>
               <div class="blog-preview-card__body">
                 <time class="blog-preview-card__date" datetime={post.data.pubDate.toISOString()}>
@@ -359,7 +436,8 @@ const faqPageLd = {
                 </a>
               </div>
             </article>
-          ))
+          );
+          })
         }
       </div>
       <div class="blog-cta">
@@ -390,7 +468,7 @@ const faqPageLd = {
     <div class="container">
       <p class="kicker kicker--dark">FAQ</p>
       <h2 id="faq-heading" class="section-h2">How can we help?</h2>
-      <HomeFaq client:load categories={faqCategories} />
+      <HomeFaq client:visible categories={faqCategories} />
     </div>
   </section>
 </BaseLayout>

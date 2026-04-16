@@ -1,7 +1,9 @@
 ---
+import { Image, getImage } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { getCollection, render } from "astro:content";
 import { siteConfig } from "../../config/siteConfig";
+import { getBlogHeroImage } from "../../data/blogHeroAssets";
 
 export async function getStaticPaths() {
   const posts = await getCollection("blog");
@@ -19,9 +21,27 @@ const description = post.data.description;
 const heroImage = post.data.heroImage;
 const canonicalPostPath = `/blog/${post.id}`;
 
-const heroAbs = heroImage.startsWith("http")
-  ? heroImage
-  : `${siteConfig.url}${heroImage.startsWith("/") ? heroImage : `/${heroImage}`}`;
+const heroAsset = getBlogHeroImage(heroImage);
+const heroOgSrc = heroAsset
+  ? (
+      await getImage({
+        src: heroAsset,
+        width: 1200,
+        height: 630,
+        format: "jpg",
+        quality: 82,
+      })
+    ).src
+  : heroImage.startsWith("http")
+    ? heroImage
+    : `${siteConfig.url}${heroImage.startsWith("/") ? heroImage : `/${heroImage}`}`;
+
+const heroAbs =
+  heroAsset && heroOgSrc.startsWith("/")
+    ? new URL(heroOgSrc, siteConfig.url).href
+    : heroImage.startsWith("http")
+      ? heroImage
+      : `${siteConfig.url}${heroImage.startsWith("/") ? heroImage : `/${heroImage}`}`;
 
 const blogPostingLd = {
   "@context": "https://schema.org",
@@ -59,7 +79,7 @@ const bookingIsExternal = booking.startsWith("http");
 <BaseLayout
   title={title}
   description={description}
-  ogImage={heroImage}
+  ogImage={heroOgSrc}
   ogType="article"
   jsonLd={blogPostingLd}
 >
@@ -77,15 +97,21 @@ const bookingIsExternal = booking.startsWith("http");
         <h1 class="blog-post__title">{post.data.title}</h1>
         <time class="blog-post__date" datetime={post.data.pubDate.toISOString()}>{dateLabel}</time>
         <div class="blog-post__hero-wrap">
-          <img
-            class="blog-post__hero-img"
-            src={heroImage}
-            alt=""
-            width="1200"
-            height="675"
-            loading="eager"
-            fetchpriority="high"
-          />
+          {heroAsset ? (
+            <Image
+              class="blog-post__hero-img"
+              src={heroAsset}
+              alt=""
+              width={1200}
+              height={675}
+              loading="eager"
+              fetchpriority="high"
+              formats={["avif", "webp"]}
+              quality={78}
+              widths={[640, 960, 1200]}
+              sizes="(min-width: 48rem) 46rem, 100vw"
+            />
+          ) : null}
         </div>
       </div>
     </header>

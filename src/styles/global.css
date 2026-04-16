@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Cormorant+Infant:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap");
-
 :root {
   --color-blue-slate: #7a9bb5;
   /* Brand spa teal */
@@ -204,15 +202,39 @@ img {
 .home-faq__item summary {
   font-weight: 600;
   cursor: pointer;
-  padding: 0.65rem 0;
+  padding: 0.65rem 0 0.65rem 1.35rem;
   list-style: none;
   font-family: var(--font-body);
   font-size: 0.95rem;
   color: var(--color-charcoal);
+  position: relative;
 }
 
 .home-faq__item summary::-webkit-details-marker {
   display: none;
+}
+
+.home-faq__item summary::marker {
+  content: "";
+}
+
+/* Custom chevron: avoids native disclosure rendering quirks (e.g. solid blocks) when markers are hidden. */
+.home-faq__item summary::before {
+  content: "";
+  position: absolute;
+  left: 0.15rem;
+  top: 0.95em;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-right: 2px solid var(--color-teal-muted);
+  border-bottom: 2px solid var(--color-teal-muted);
+  transform: rotate(-45deg);
+  transition: transform 0.2s ease;
+}
+
+.home-faq__item[open] summary::before {
+  top: 1.05em;
+  transform: rotate(45deg);
 }
 
 .home-faq__item p {
@@ -511,21 +533,23 @@ img {
   }
 }
 
-.testimonial-carousel {
+/* Homepage testimonials: horizontal scroll, 3 cards per snap page */
+.testimonial-strip {
   position: relative;
-  max-width: 40rem;
+  width: 100%;
+  max-width: var(--max-width);
   margin-inline: auto;
   padding-top: var(--space-md);
 }
 
-.testimonial-carousel__controls {
+.testimonial-strip__controls {
   display: flex;
   justify-content: flex-end;
   gap: 0.35rem;
   margin-bottom: var(--space-sm);
 }
 
-.testimonial-carousel__btn {
+.testimonial-strip__btn {
   width: 2.25rem;
   height: 2.25rem;
   border-radius: 999px;
@@ -537,26 +561,75 @@ img {
   cursor: pointer;
 }
 
-.testimonial-carousel__btn:hover {
+.testimonial-strip__btn:hover {
   background: var(--color-paper-cool);
 }
 
-.testimonial-carousel__slide {
+.testimonial-strip__viewport {
+  display: flex;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  gap: 0;
+  border-radius: var(--radius-card);
+  scrollbar-width: thin;
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .testimonial-strip__viewport {
+    scroll-behavior: auto;
+  }
+}
+
+.testimonial-strip__viewport:focus-visible {
+  outline: 2px solid var(--color-teal-light);
+  outline-offset: 4px;
+}
+
+.testimonial-strip__page {
+  flex: 0 0 100%;
+  min-width: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-md);
+  box-sizing: border-box;
+  padding-inline: 1px;
+}
+
+@media (max-width: 719px) {
+  .testimonial-strip__page {
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+  }
+}
+
+.testimonial-strip__card {
   margin: 0;
   padding: var(--space-md);
   border-radius: var(--radius-card);
   border: 1px solid var(--color-border-subtle);
   background: var(--color-white);
   box-shadow: var(--shadow-card);
+  min-height: 100%;
+  box-sizing: border-box;
 }
 
-.testimonial-carousel__top {
+.testimonial-strip__top {
   display: flex;
   gap: var(--space-sm);
   align-items: flex-start;
 }
 
-.testimonial-carousel__avatar {
+.testimonial-strip__body {
+  min-width: 0;
+}
+
+.testimonial-strip__avatar {
   width: 4.5rem;
   height: 4.5rem;
   border-radius: 999px;
@@ -565,7 +638,7 @@ img {
   flex-shrink: 0;
 }
 
-.testimonial-carousel__avatar--initials {
+.testimonial-strip__avatar--initials {
   display: grid;
   place-items: center;
   background: color-mix(in srgb, var(--color-teal) 16%, var(--color-white));
@@ -576,21 +649,21 @@ img {
   color: var(--color-teal-muted);
 }
 
-.testimonial-carousel blockquote {
+.testimonial-strip__card blockquote {
   margin: 0;
   font-style: italic;
   font-family: var(--font-accent);
-  font-size: 1.05rem;
+  font-size: clamp(0.92rem, 1.5vw, 1.05rem);
   line-height: 1.55;
 }
 
-.testimonial-carousel figcaption {
+.testimonial-strip__card figcaption {
   margin-top: var(--space-xs);
   font-size: 0.88rem;
   color: var(--color-teal-muted);
 }
 
-.testimonial-carousel__tag {
+.testimonial-strip__tag {
   margin: 0.25rem 0 0;
   font-size: 0.72rem;
   letter-spacing: 0.08em;

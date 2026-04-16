@@ -1,4 +1,5 @@
 ---
+import { Image, getImage } from "astro:assets";
 import BaseLayout from "./BaseLayout.astro";
 import PhotoPlaceholder from "../components/PhotoPlaceholder.astro";
 import type { ServiceDefinition } from "../data/serviceRegistry";
@@ -7,8 +8,8 @@ import {
   getRelatedServices,
   whereToStartAnchorForCategory,
 } from "../data/serviceRegistry";
-import { hubTileImageSrc } from "../data/serviceHubBento";
-import { resolveBodySlotSrc, resolveResultSlotSrc } from "../data/serviceSlotImages";
+import { getServiceBentoImage } from "../data/serviceHubBento";
+import { getBodySlotImage, getResultSlotImage } from "../data/serviceSlotAssets";
 import { siteConfig, areaServed } from "../config/siteConfig";
 
 interface Props {
@@ -35,11 +36,22 @@ const whatIsItParagraphs = Array.isArray(service.whatIsIt)
   ? service.whatIsIt
   : [service.whatIsIt];
 
-/** Hero / OG art: same editorial PNGs as category hub bento tiles (`public/images/service-bento/`). */
-const heroTileSrc = service.heroImage ? hubTileImageSrc(service) : null;
+/** Hero / OG art: optimized bento tiles from `src/assets/images/service-bento/`. */
+const heroBento = service.heroImage ? getServiceBentoImage(service.slug) : undefined;
+const ogImageForSocial = heroBento
+  ? (
+      await getImage({
+        src: heroBento,
+        width: 1200,
+        height: 630,
+        format: "jpg",
+        quality: 82,
+      })
+    ).src
+  : siteConfig.defaultOGImage;
 
-const bodySlotSrc = service.bodyImage ? resolveBodySlotSrc(service.slug) : null;
-const resultSlotSrc = resolveResultSlotSrc(service.slug);
+const bodySlotImage = service.bodyImage ? getBodySlotImage(service.slug) : undefined;
+const resultSlotImage = getResultSlotImage(service.slug);
 const bodySlotAlt = `${service.name}: treatment imagery at ${siteConfig.name}`;
 const resultSlotAlt = `Clinical environment: ${service.name} at ${siteConfig.name}, ${siteConfig.address.city}, ${siteConfig.address.state}`;
 
@@ -112,26 +124,30 @@ const faqPageLd =
 <BaseLayout
   title={title}
   description={description}
-  ogImage={heroTileSrc ?? undefined}
+  ogImage={ogImageForSocial}
   jsonLd={[breadcrumbLd, procedureLd, ...(faqPageLd ? [faqPageLd] : [])]}
 >
   <!-- Hero: full-bleed treatment art + scrim; copy lives on a glass panel (no side frame) -->
   <section
-    class:list={["service-hero", heroTileSrc ? "service-hero--has-media" : "service-hero--gradient-only"]}
+    class:list={["service-hero", heroBento ? "service-hero--has-media" : "service-hero--gradient-only"]}
     aria-labelledby="service-hero-heading"
   >
     {
-      heroTileSrc && (
+      heroBento && (
         <div class="service-hero__media" aria-hidden="true">
-          <img
+          <Image
             class="service-hero__media-img"
-            src={heroTileSrc}
+            src={heroBento}
             alt=""
             width={800}
             height={600}
             loading="eager"
             fetchpriority="high"
             decoding="async"
+            formats={["avif", "webp"]}
+            quality={78}
+            widths={[640, 800, 1024, 1280]}
+            sizes="100vw"
           />
         </div>
       )
@@ -208,15 +224,19 @@ const faqPageLd =
           service.bodyImage && (
             <div class="body-image-slot">
               {
-                bodySlotSrc ? (
-                  <img
+                bodySlotImage ? (
+                  <Image
                     class="service-slot-img service-slot-img--body"
-                    src={bodySlotSrc}
+                    src={bodySlotImage}
                     alt={bodySlotAlt}
                     width={1200}
                     height={300}
                     loading="lazy"
                     decoding="async"
+                    formats={["avif", "webp"]}
+                    quality={78}
+                    widths={[600, 900, 1200]}
+                    sizes="(min-width: 72rem) 72rem, 100vw"
                   />
                 ) : (
                   <PhotoPlaceholder
@@ -291,29 +311,21 @@ const faqPageLd =
         <h3>After</h3>
         <p>{service.expectAfter}</p>
 
-        <!-- RESULT IMAGE SLOT - shared asset: public/images/service-slots/result-environment.* -->
+        <!-- RESULT IMAGE SLOT: shared or per-service assets in `src/assets/images/service-slots/` -->
         <div class="result-image-slot">
-          {
-            resultSlotSrc ? (
-              <img
-                class="service-slot-img service-slot-img--result"
-                src={resultSlotSrc}
-                alt={resultSlotAlt}
-                width={1200}
-                height={300}
-                loading="lazy"
-                decoding="async"
-              />
-            ) : (
-              <div aria-hidden="true">
-                <PhotoPlaceholder
-                  variant="banner"
-                  label="Result / environment photo"
-                  caption="Closing visual - treatment room environment, provider at work, or a results-context image. Warm, clinical, aspirational. Avoid identifiable patient features unless you have written consent."
-                />
-              </div>
-            )
-          }
+          <Image
+            class="service-slot-img service-slot-img--result"
+            src={resultSlotImage}
+            alt={resultSlotAlt}
+            width={1200}
+            height={300}
+            loading="lazy"
+            decoding="async"
+            formats={["avif", "webp"]}
+            quality={78}
+            widths={[600, 900, 1200]}
+            sizes="(min-width: 72rem) 72rem, 100vw"
+          />
         </div>
       </div>
 
