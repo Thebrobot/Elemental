@@ -83,6 +83,17 @@ const homeHeroOg = (
   })
 ).src;
 
+/** Preload URL must match `<Image>` output (same width/format/quality as a `srcset` candidate the mobile viewport will pick). */
+const homeHeroLcpPreload = (
+  await getImage({
+    src: homeHero,
+    width: 640,
+    height: 360,
+    format: "webp",
+    quality: 78,
+  })
+).src;
+
 const testimonialSlides = [
   {
     quote:
@@ -241,6 +252,7 @@ const faqPageLd = {
   jsonLd={faqPageLd}
   ogImage={homeHeroOg}
 >
+  <link slot="head-extras" rel="preload" as="image" href={homeHeroLcpPreload} fetchpriority="high" />
   <section class="hero" aria-labelledby="hero-heading">
     <div class="hero__media" aria-hidden="true">
       <Image
