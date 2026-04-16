@@ -1,0 +1,663 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ContactForm from "../islands/ContactForm";
+import { siteConfig, fullAddress } from "../config/siteConfig";
+
+const title = `Contact Us | ${siteConfig.name} - Elkhorn, WI`;
+const description = `Reach ${siteConfig.name} in Elkhorn, WI - book online, call our team, or send a message. Serving Walworth County and the Lake Geneva area.`;
+
+const booking = siteConfig.bookingUrl || "#";
+const bookingIsExternal = booking.startsWith("http");
+const canonical = new URL("/contact", siteConfig.url).href;
+
+const contactPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: `Contact ${siteConfig.legalName}`,
+  url: canonical,
+  description,
+};
+---
+
+<BaseLayout title={title} description={description} jsonLd={contactPageSchema}>
+  <!-- ─── Hero ─── -->
+  <section class="contact-hero" aria-labelledby="contact-hero-heading">
+    <div class="contact-hero__overlay" aria-hidden="true"></div>
+    <div class="container">
+      <p class="contact-hero__kicker">Contact Us</p>
+      <h1 id="contact-hero-heading" class="contact-hero__h1">
+        Let's Start the Conversation
+      </h1>
+      <p class="contact-hero__lead">
+        Whether you have a question, want to learn more about a treatment, or are ready to
+        book. Our team in Elkhorn, WI is happy to help. We typically reply within one
+        business day.
+      </p>
+    </div>
+  </section>
+
+  <!-- ─── Quick-connect cards ─── -->
+  <section class="section section--cream" aria-label="Quick contact options">
+    <div class="container">
+      <div class="connect-cards">
+        <!-- Book -->
+        <div class="connect-card">
+          <div class="connect-card__icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <line x1="16" y1="2" x2="16" y2="6"/>
+              <line x1="8" y1="2" x2="8" y2="6"/>
+              <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+          </div>
+          <h2 class="connect-card__title">Book a Visit</h2>
+          <p class="connect-card__body">
+            The fastest way to get started. Reserve your spot online in minutes - no phone call required.
+          </p>
+          <a
+            class="btn connect-card__btn"
+            href={booking}
+            target={bookingIsExternal ? "_blank" : undefined}
+            rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+          >
+            Book online
+          </a>
+        </div>
+
+        <!-- Call -->
+        <div class="connect-card">
+          <div class="connect-card__icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 11.61 19 19.45 19.45 0 0 1 5 12.39 19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+            </svg>
+          </div>
+          <h2 class="connect-card__title">Call or Text Us</h2>
+          <p class="connect-card__body">
+            Prefer to talk? Our team is available during business hours for questions, scheduling, and treatment guidance.
+          </p>
+          {
+            siteConfig.phone ? (
+              <a class="btn connect-card__btn" href={`tel:${siteConfig.phone}`}>
+                {siteConfig.phoneDisplay || siteConfig.phone}
+              </a>
+            ) : (
+              <p class="connect-card__placeholder">Phone number coming soon</p>
+            )
+          }
+        </div>
+
+        <!-- Message -->
+        <div class="connect-card">
+          <div class="connect-card__icon" aria-hidden="true">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
+            </svg>
+          </div>
+          <h2 class="connect-card__title">Send a Message</h2>
+          <p class="connect-card__body">
+            Great for detailed questions or when you're still exploring options. Use the form below and we'll be in touch.
+          </p>
+          <a class="btn connect-card__btn" href="#contact-form">Go to form</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Form + Info ─── -->
+  <section class="section section--cream section--textured" id="contact-form" aria-labelledby="form-heading">
+    <div class="container contact-grid">
+      <!-- Form -->
+      <div class="form-col">
+        <h2 id="form-heading">Send a Message</h2>
+        <p class="fine-print">
+          This form is not monitored around the clock - for medical emergencies, call 911. Please
+          keep messages to scheduling questions and treatment inquiries only. Do not include detailed
+          medical history or personal health information (PHI).
+        </p>
+        <ContactForm client:load />
+      </div>
+
+      <!-- Info aside -->
+      <aside class="info-aside" aria-label="Location and hours">
+        <div class="info-card">
+          <h2 class="info-card__title">Find Us</h2>
+          {
+            fullAddress ? (
+              <p class="info-card__detail">{fullAddress}</p>
+            ) : (
+              <p class="info-card__detail">
+                Elkhorn, WI, Walworth County
+                <span class="info-placeholder">(Full address coming soon)</span>
+              </p>
+            )
+          }
+          {
+            siteConfig.phone && (
+              <p class="info-card__detail">
+                <a href={`tel:${siteConfig.phone}`}>{siteConfig.phoneDisplay || siteConfig.phone}</a>
+              </p>
+            )
+          }
+          {
+            siteConfig.email && (
+              <p class="info-card__detail">
+                <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+              </p>
+            )
+          }
+          <div class="map-wrap">
+            <iframe
+              title="Elemental Skin & Body location in Elkhorn, WI"
+              src="https://www.google.com/maps?q=Elkhorn%2C+WI&output=embed"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            />
+          </div>
+        </div>
+
+        <div class="info-card">
+          <h2 class="info-card__title">Hours</h2>
+          <!-- TODO: update when official hours are confirmed -->
+          <ul class="hours-list">
+            <li><span>Monday – Friday</span><span>By appointment</span></li>
+            <li><span>Saturday</span><span>By appointment</span></li>
+            <li><span>Sunday</span><span>Closed</span></li>
+          </ul>
+          <p class="hours-note">
+            Hours may vary around holidays. Book online for the most up-to-date availability.
+          </p>
+        </div>
+
+        {
+          (siteConfig.social.instagram || siteConfig.social.facebook) && (
+            <div class="info-card info-card--social">
+              <h2 class="info-card__title">Follow Along</h2>
+              <div class="social-links">
+                {siteConfig.social.instagram && (
+                  <a
+                    href={siteConfig.social.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="social-link"
+                    aria-label="Instagram"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <rect x="2" y="2" width="20" height="20" rx="5"/>
+                      <circle cx="12" cy="12" r="4"/>
+                      <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
+                    </svg>
+                    Instagram
+                  </a>
+                )}
+                {siteConfig.social.facebook && (
+                  <a
+                    href={siteConfig.social.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="social-link"
+                    aria-label="Facebook"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                    </svg>
+                    Facebook
+                  </a>
+                )}
+              </div>
+            </div>
+          )
+        }
+      </aside>
+    </div>
+  </section>
+
+  <!-- ─── What to expect ─── -->
+  <section class="section" aria-labelledby="next-steps-heading">
+    <div class="container">
+      <h2 id="next-steps-heading" class="section-heading">What Happens After You Reach Out</h2>
+      <div class="next-steps">
+        <div class="next-step">
+          <span class="next-step__num" aria-hidden="true">1</span>
+          <div>
+            <h3>We receive your message</h3>
+            <p>
+              Your inquiry goes directly to our team. We review every submission personally - no bots,
+              no automated back-and-forth.
+            </p>
+          </div>
+        </div>
+        <div class="next-step">
+          <span class="next-step__num" aria-hidden="true">2</span>
+          <div>
+            <h3>We reply within one business day</h3>
+            <p>
+              Expect a response by phone or email depending on what you provided. If you want to skip
+              the wait, book directly online via Vagaro.
+            </p>
+          </div>
+        </div>
+        <div class="next-step">
+          <span class="next-step__num" aria-hidden="true">3</span>
+          <div>
+            <h3>We build your plan together</h3>
+            <p>
+              Your first visit is a real conversation. We discuss your goals, walk through your options,
+              and recommend only what makes sense for you - no pressure, just clarity.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Bottom CTA ─── -->
+  <section class="section section--teal">
+    <div class="container cta-block">
+      <h2>Ready to book?</h2>
+      <p>Skip the inbox and reserve your visit in minutes through our online booking system.</p>
+      <div class="cta-actions">
+        <a
+          class="btn btn--ghost"
+          href={booking}
+          target={bookingIsExternal ? "_blank" : undefined}
+          rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+        >
+          {siteConfig.bookingLabel}
+        </a>
+        {
+          siteConfig.phone && (
+            <a class="btn btn--ghost" href={`tel:${siteConfig.phone}`}>
+              Call {siteConfig.phoneDisplay || siteConfig.phone}
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── Hero (overlaps sticky pill header - same pattern as service pages) ─── */
+  .contact-hero {
+    position: relative;
+    isolation: isolate;
+    min-height: min(46vh, 480px);
+    display: flex;
+    align-items: center;
+    margin-top: -6.35rem;
+    padding-top: calc(6.35rem + clamp(4rem, 10vw, 5.5rem));
+    padding-bottom: clamp(3.5rem, 9vw, 5rem);
+    background: linear-gradient(
+      125deg,
+      color-mix(in srgb, var(--color-teal-muted) 42%, var(--color-charcoal)) 0%,
+      color-mix(in srgb, var(--color-teal) 55%, #0d1a1c) 45%,
+      color-mix(in srgb, var(--color-charcoal) 88%, var(--color-teal)) 100%
+    );
+  }
+
+  .contact-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: radial-gradient(
+      ellipse 80% 60% at 20% 30%,
+      rgb(255 255 255 / 0.07),
+      transparent 55%
+    );
+    pointer-events: none;
+  }
+
+  .contact-hero .container {
+    position: relative;
+    z-index: 1;
+  }
+
+  .contact-hero__kicker {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-teal-light);
+    font-family: var(--font-body);
+    margin: 0 0 var(--space-xs);
+  }
+
+  .contact-hero__h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    color: var(--color-white);
+    margin: 0 0 var(--space-sm);
+    max-width: 22ch;
+    line-height: 1.15;
+  }
+
+  .contact-hero__lead {
+    color: rgb(255 255 255 / 0.82);
+    font-size: clamp(1rem, 2vw, 1.15rem);
+    max-width: 46ch;
+    margin: 0;
+    line-height: 1.65;
+  }
+
+  /* ─── Quick-connect cards ─── */
+  .connect-cards {
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+  }
+
+  .connect-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-teal-light);
+    border-radius: 10px;
+    padding: var(--space-lg) var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.05);
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  .connect-card:hover {
+    box-shadow: 0 10px 32px rgb(0 0 0 / 0.09);
+    transform: translateY(-2px);
+  }
+
+  .connect-card__icon {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--color-teal) 10%, var(--color-white));
+    display: grid;
+    place-items: center;
+    color: var(--color-teal);
+    flex-shrink: 0;
+  }
+
+  .connect-card__title {
+    font-size: 1.15rem;
+    margin: 0;
+    color: var(--color-charcoal);
+  }
+
+  .connect-card__body {
+    font-size: 0.95rem;
+    margin: 0;
+    flex: 1;
+    color: var(--color-charcoal);
+    line-height: 1.6;
+  }
+
+  .connect-card__btn {
+    align-self: flex-start;
+    margin-top: var(--space-xs);
+  }
+
+  .connect-card__placeholder {
+    font-size: 0.9rem;
+    color: var(--color-teal-muted);
+    font-style: italic;
+    margin: var(--space-xs) 0 0;
+  }
+
+  /* ─── Form + info grid ─── */
+  .contact-grid {
+    display: grid;
+    gap: var(--space-xl);
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  @media (min-width: 960px) {
+    .contact-grid {
+      grid-template-columns: 1.15fr 0.85fr;
+    }
+  }
+
+  .form-col h2 {
+    margin-top: 0;
+  }
+
+  .fine-print {
+    font-size: 0.88rem;
+    color: var(--color-teal-muted);
+    line-height: 1.55;
+    margin-bottom: var(--space-sm);
+  }
+
+  /* ─── Info aside ─── */
+  .info-aside {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .info-card {
+    background: var(--color-white);
+    border: 1px solid var(--color-teal-light);
+    border-radius: 10px;
+    padding: var(--space-md);
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.04);
+  }
+
+  .info-card__title {
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.95rem;
+    color: var(--color-teal-muted);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .info-card__detail {
+    margin: 0 0 0.5rem;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .info-card__detail a {
+    font-weight: 600;
+    color: var(--color-teal);
+    text-decoration: none;
+  }
+
+  .info-card__detail a:hover {
+    text-decoration: underline;
+  }
+
+  .info-placeholder {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--color-teal-muted);
+    font-style: italic;
+    margin-top: 0.15rem;
+  }
+
+  .map-wrap {
+    margin-top: var(--space-sm);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .map-wrap iframe {
+    width: 100%;
+    min-height: 240px;
+    border: 0;
+    display: block;
+  }
+
+  /* ─── Hours ─── */
+  .hours-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .hours-list li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    gap: var(--space-sm);
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-teal-light) 60%, transparent);
+  }
+
+  .hours-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .hours-list li span:first-child {
+    font-weight: 600;
+    color: var(--color-charcoal);
+  }
+
+  .hours-list li span:last-child {
+    color: var(--color-teal-muted);
+  }
+
+  .hours-note {
+    font-size: 0.8rem;
+    color: var(--color-teal-muted);
+    margin: var(--space-sm) 0 0;
+    font-style: italic;
+  }
+
+  /* ─── Social links ─── */
+  .social-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-xs);
+  }
+
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-teal);
+    text-decoration: none;
+    border: 1px solid var(--color-teal-light);
+    border-radius: 999px;
+    padding: 0.4rem 0.9rem 0.4rem 0.65rem;
+    transition: background 0.15s ease;
+  }
+
+  .social-link:hover {
+    background: color-mix(in srgb, var(--color-teal) 8%, var(--color-white));
+  }
+
+  /* ─── What to expect ─── */
+  .section-heading {
+    position: relative;
+    padding-bottom: var(--space-xs);
+    margin-bottom: var(--space-lg);
+    margin-top: 0;
+  }
+
+  .section-heading::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 3rem;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-teal), var(--color-teal-light));
+    border-radius: 1px;
+  }
+
+  .next-steps {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    max-width: 56rem;
+  }
+
+  .next-step {
+    display: flex;
+    gap: var(--space-md);
+    align-items: flex-start;
+  }
+
+  .next-step__num {
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 999px;
+    background: var(--color-teal);
+    color: var(--color-white);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: grid;
+    place-items: center;
+    margin-top: 0.15rem;
+  }
+
+  .next-step h3 {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--color-charcoal);
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .next-step p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: var(--color-charcoal);
+  }
+
+  /* ─── Bottom CTA ─── */
+  .cta-block {
+    text-align: center;
+  }
+
+  .cta-block h2 {
+    color: var(--color-white);
+    margin-top: 0;
+  }
+
+  .cta-block p {
+    color: rgb(255 255 255 / 0.85);
+    max-width: 38ch;
+    margin: 0 auto var(--space-md);
+  }
+
+  .cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    justify-content: center;
+  }
+
+  @media (max-width: 520px) {
+    .cta-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .cta-actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .btn--ghost {
+    background: transparent;
+    border: 1px solid var(--color-white);
+    color: var(--color-white);
+  }
+
+  .btn--ghost:hover {
+    background: rgb(255 255 255 / 0.12);
+  }
+</style>

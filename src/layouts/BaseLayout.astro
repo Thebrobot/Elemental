@@ -1,0 +1,106 @@
+---
+import "../styles/global.css";
+import { siteConfig, localBusinessSchema } from "../config/siteConfig";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  /** Open Graph type; default website. Use article for blog posts. */
+  ogType?: string;
+  /** JSON-LD object or array; omit to skip extra schema beyond defaults */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** When true, homepage LocalBusiness block is included */
+  includeLocalBusiness?: boolean;
+}
+
+const {
+  title,
+  description,
+  ogImage = siteConfig.defaultOGImage,
+  ogType = "website",
+  jsonLd,
+  includeLocalBusiness = false,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, siteConfig.url).href;
+const ogURL = new URL(Astro.url.pathname, siteConfig.url).href;
+const ogImageAbs = ogImage.startsWith("http")
+  ? ogImage
+  : new URL(ogImage, siteConfig.url).href;
+
+const ga4Id = import.meta.env.PUBLIC_GA4_ID;
+
+const extraLd: Record<string, unknown>[] = [];
+if (includeLocalBusiness) {
+  extraLd.push(localBusinessSchema as unknown as Record<string, unknown>);
+}
+if (jsonLd) {
+  extraLd.push(...(Array.isArray(jsonLd) ? jsonLd : [jsonLd]));
+}
+
+const ldJson =
+  extraLd.length > 0 ? JSON.stringify(extraLd.length === 1 ? extraLd[0] : extraLd) : null;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={ogURL} />
+    <meta property="og:image" content={ogImageAbs} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="Elemental Skin & Body Medical Aesthetics" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageAbs} />
+    {siteConfig.twitterHandle && <meta name="twitter:site" content={siteConfig.twitterHandle} />}
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <!-- Geo tags for local SEO -->
+    <meta name="geo.region" content="US-WI" />
+    <meta name="geo.placename" content="Elkhorn, Wisconsin" />
+    {siteConfig.schema.geo.latitude !== 0 && (
+      <>
+        <meta name="geo.position" content={`${siteConfig.schema.geo.latitude};${siteConfig.schema.geo.longitude}`} />
+        <meta name="ICBM" content={`${siteConfig.schema.geo.latitude}, ${siteConfig.schema.geo.longitude}`} />
+      </>
+    )}
+    {ldJson && <script type="application/ld+json" set:html={ldJson} />}
+    {
+      ga4Id && (
+        <>
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=${ga4Id}`} />
+          <script is:inline define:vars={{ ga4Id }}>
+            window.dataLayer = window.dataLayer || [];
+            function gtag() {
+              dataLayer.push(arguments);
+            }
+            gtag("js", new Date());
+            gtag("config", ga4Id);
+          </script>
+        </>
+      )
+    }
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

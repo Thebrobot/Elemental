@@ -1,0 +1,40 @@
+# Elemental Skin & Body: Cursor Rules
+# Med Spa | Elkhorn, WI | Astro Framework
+
+## Framework
+- Astro only; `output: 'static'` unless SSR is explicitly required.
+- Content Collections for blog/multi-page editorial content when added.
+- Prefer `.astro` components; minimal client JS.
+- Interactivity: Astro islands with React.
+- TypeScript preferred.
+- Do not use `<form>` HTML elements; use React islands with `onClick`/`onChange` for user-driven submission (see `src/islands/ContactForm.tsx`).
+
+## Structure
+See `src/pages`, `src/layouts`, `src/components`, `src/config/siteConfig.ts`, `src/styles/global.css`.
+
+## SEO (every page)
+- Unique `<title>`: `Service Name | Elemental Skin & Body, Elkhorn, WI` (pattern).
+- Unique meta description (150–160 chars, primary keyword).
+- Canonical via absolute URL from `siteConfig.url` + `Astro.url.pathname`.
+- Open Graph: `og:title`, `og:description`, `og:image`, `og:type`, `og:url`.
+- `@astrojs/sitemap` enabled in `astro.config.mjs`.
+- `public/robots.txt` references sitemap URL (update domain with `siteConfig.url`).
+- JSON-LD: homepage `MedicalBusiness` + `LocalBusiness`; services `MedicalProcedure` + `BreadcrumbList`; about `MedicalOrganization`.
+- Semantic headings: one `h1` per page.
+- Internal links: each service page links to 2+ related services via `getRelatedServices`.
+
+## URL structure
+Follow routes in `siteConfig.nav.services` and `src/data/serviceRegistry.ts`; do not change slugs without redirects.
+
+## Security
+- Never commit API keys; use `// TODO: add to .env` for secrets.
+- `bookingUrl` only from `siteConfig.bookingUrl`.
+- External anchors: `rel="noopener noreferrer"`.
+- Server-side validation for contact submissions in `netlify/functions/contact.ts`.
+- Security headers in `netlify.toml` (CSP allows Google Fonts, Maps embed, GA, Vagaro as configured).
+
+## Brand
+Use CSS variables in `src/styles/global.css`; avoid hardcoded hex in components.
+
+## Booking
+Vagaro opens in a new tab via `bookingUrl`; no iframe embed.

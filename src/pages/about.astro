@@ -1,0 +1,150 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { siteConfig } from "../config/siteConfig";
+
+const title = `About Us | ${siteConfig.name} - Elkhorn, WI`;
+const description = `Learn about ${siteConfig.name}-our mission, medical aesthetics focus, and commitment to transparent, patient-centered care in Elkhorn, WI.`;
+
+const booking = siteConfig.bookingUrl || "#";
+const bookingIsExternal = booking.startsWith("http");
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="section section--cream page-hero" aria-labelledby="about-heading">
+    <div class="container">
+      <p class="kicker">About Us</p>
+      <h1 id="about-heading">Medical aesthetics rooted in education and trust</h1>
+      <p class="lede">
+        {siteConfig.name} exists so you can access physician-led injectables, skin and laser treatments, body contouring, and wellness services in one Elkhorn destination-without sacrificing clarity or comfort.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="mission-heading">
+    <div class="container about-grid">
+      <div>
+        <h2 id="mission-heading">Our mission</h2>
+        <p>
+          We believe aesthetic medicine should feel collaborative. Every visit blends clinical rigor with space to ask questions, understand tradeoffs, and build a plan that respects your timeline and budget.
+        </p>
+        <p>
+          Whether you are refining skin texture, sculpting the body you feel confident in, or addressing hormones and metabolism with labs and medical oversight, our team focuses on predictable, natural-looking outcomes.
+        </p>
+        <a
+          class="btn"
+          href={booking}
+          target={bookingIsExternal ? "_blank" : undefined}
+          rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+        >
+          {siteConfig.bookingLabel}
+        </a>
+      </div>
+      <div class="approach-pillars">
+        <div class="pillar">
+          <h3>Clinical depth</h3>
+          <p>Protocols built on anatomy, device physics, and evidence-not trends for their own sake.</p>
+        </div>
+        <div class="pillar">
+          <h3>Warmth</h3>
+          <p>We slow down, listen, and translate jargon into plain language you can act on.</p>
+        </div>
+        <div class="pillar">
+          <h3>Continuity</h3>
+          <p>Skin, body, and wellness live under one roof so your roadmap stays cohesive over time.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--teal cta-section" aria-labelledby="cta-heading">
+    <div class="container">
+      <h2 id="cta-heading">Visit us in Elkhorn</h2>
+      <p>Book a consultation to tour treatment options and meet the team.</p>
+      <a
+        class="btn btn--light"
+        href={booking}
+        target={bookingIsExternal ? "_blank" : undefined}
+        rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+      >
+        {siteConfig.bookingLabel}
+      </a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    max-width: 42rem;
+  }
+
+  .lede {
+    font-size: 1.05rem;
+    max-width: 40rem;
+    line-height: 1.7;
+  }
+
+  .about-grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  @media (min-width: 900px) {
+    .about-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .approach-pillars {
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .pillar {
+    padding: var(--space-md);
+    border-left: 3px solid var(--color-teal);
+    background: var(--color-cream);
+    border-radius: 0 var(--radius-card) var(--radius-card) 0;
+  }
+
+  .pillar h3 {
+    margin: 0 0 0.35rem;
+    color: var(--color-teal);
+  }
+
+  .pillar p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  .section--teal {
+    background: var(--color-teal);
+    color: var(--color-white);
+  }
+
+  .section--teal h2 {
+    color: var(--color-white);
+  }
+
+  .cta-section {
+    text-align: center;
+  }
+
+  .cta-section p {
+    font-size: 1.05rem;
+    opacity: 0.9;
+    margin-bottom: var(--space-md);
+  }
+
+  .btn--light {
+    background: var(--color-white);
+    color: var(--color-teal);
+    font-weight: 700;
+  }
+
+  .btn--light:hover {
+    background: color-mix(in srgb, var(--color-white) 90%, var(--color-teal));
+    color: var(--color-teal);
+  }
+</style>

@@ -1,0 +1,400 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { siteConfig } from "../../../config/siteConfig";
+import {
+  getHubCategories,
+  getServicesByCategory,
+  type ServiceCategory,
+} from "../../../data/serviceRegistry";
+import {
+  getCategoryHubBreadcrumbLabel,
+  getCategoryHubHeroHeadline,
+  getCategoryHubHeroTagline,
+  getCategoryHubMetaDescription,
+  getCategoryHubPageTitleFocus,
+  getOtherCategoryHubLinks,
+} from "../../../data/categoryHubContent";
+import { getHubBentoPlacements } from "../../../data/hubBentoLayouts";
+import { hubTileImageSrc } from "../../../data/serviceHubBento";
+
+function isServiceCategory(value: string): value is ServiceCategory {
+  return getHubCategories().includes(value as ServiceCategory);
+}
+
+export function getStaticPaths() {
+  return getHubCategories().map((category) => ({
+    params: { category },
+  }));
+}
+
+const raw = Astro.params.category ?? "";
+if (!isServiceCategory(raw)) {
+  return new Response(null, { status: 404 });
+}
+
+const category = raw;
+/** Registry order (matches nav / mega menu), not A–Z; reads as an intentional sequence. */
+const services = getServicesByCategory(category);
+const hubBentoCells = getHubBentoPlacements(services.length);
+const canonicalPath = `/services/${category}/`;
+
+const title = `${getCategoryHubPageTitleFocus(category)} | ${siteConfig.name}, Elkhorn, WI`;
+const description = getCategoryHubMetaDescription(category);
+const booking = siteConfig.bookingUrl || "#";
+const bookingIsExternal = booking.startsWith("http");
+
+const breadcrumbName = getCategoryHubBreadcrumbLabel(category);
+const relatedHubs = getOtherCategoryHubLinks(category);
+
+const breadcrumbLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: `${siteConfig.url}/`,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: breadcrumbName,
+      item: `${siteConfig.url}${canonicalPath}`,
+    },
+  ],
+};
+
+const treatmentItemListLd = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: breadcrumbName,
+  description: getCategoryHubMetaDescription(category),
+  numberOfItems: services.length,
+  itemListElement: services.map((s, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: s.name,
+    url: `${siteConfig.url}/services/${s.category}/${s.slug}`,
+  })),
+};
+---
+
+<BaseLayout title={title} description={description} jsonLd={[breadcrumbLd, treatmentItemListLd]}>
+  <section class="section section--cream page-hero cat-hub-hero" aria-labelledby="cat-hub-heading">
+    <div class="container">
+      <nav class="breadcrumbs cat-hub-breadcrumbs" aria-label="Breadcrumb">
+        <a href="/">Home</a>
+        <span aria-hidden="true"> / </span>
+        <span>{breadcrumbName}</span>
+      </nav>
+      <h1 id="cat-hub-heading">{getCategoryHubHeroHeadline(category)}</h1>
+      <p class="lede">{getCategoryHubHeroTagline(category)}</p>
+      <div class="cat-hub-hero__cta">
+        <a
+          class="btn"
+          href={booking}
+          target={bookingIsExternal ? "_blank" : undefined}
+          rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+        >
+          {siteConfig.bookingLabel}
+        </a>
+        <a class="btn cat-hub-btn-secondary" href="/where-to-start">Where to start</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper" aria-labelledby="treatments-heading">
+    <div class="container cat-hub-main">
+      <h2 id="treatments-heading" class="cat-hub-h2">Treatments in this category</h2>
+      <p class="cat-hub-lede">
+        Open any guide for timing, candidacy, and what to expect. Prefer a guided tour first?
+        <a href="/where-to-start">Where to start</a>
+        or <a href="/contact">contact us</a>.
+      </p>
+      <div class="cat-hub-bento">
+        {
+          services.map((s, i) => {
+            const cell = hubBentoCells[i]!;
+            const bentoVars = `--bento-cs:${cell.colStart};--bento-csp:${cell.colSpan};--bento-rs:${cell.rowStart};--bento-rsp:${cell.rowSpan};`;
+            return (
+            <a
+              class="cat-hub-bento-card"
+              href={`/services/${s.category}/${s.slug}`}
+              aria-label={`${s.name}: full treatment guide`}
+              style={bentoVars}
+            >
+              <img
+                class="cat-hub-bento-card__img"
+                src={hubTileImageSrc(s)}
+                alt=""
+                width={800}
+                height={600}
+                loading="lazy"
+                decoding="async"
+              />
+              <span class="cat-hub-bento-card__scrim" aria-hidden="true" />
+              <span class="cat-hub-bento-card__body">
+                <span class="cat-hub-bento-card__title">{s.name}</span>
+                <span class="cat-hub-bento-card__cta">
+                  View guide
+                  <svg class="cat-hub-bento-card__arrow" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </span>
+            </a>
+          );
+          })
+        }
+      </div>
+      <p class="cat-hub-bento-note">
+        Illustrative scenes only, not patient photographs, before-and-afters, or guaranteed outcomes. Your clinician will personalize recommendations in person.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--cream section--textured" aria-labelledby="related-cat-heading">
+    <div class="container cat-hub-related">
+      <h2 id="related-cat-heading" class="cat-hub-h2">Explore other categories</h2>
+      <ul class="cat-hub-related__list">
+        {relatedHubs.map((h) => (
+          <li>
+            <a href={h.href}>{h.label}</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .cat-hub-hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.65rem);
+    max-width: 44rem;
+    line-height: 1.2;
+  }
+
+  .cat-hub-breadcrumbs {
+    margin-bottom: var(--space-md);
+    font-size: 0.9rem;
+    color: color-mix(in srgb, var(--color-charcoal) 72%, transparent);
+  }
+
+  .cat-hub-breadcrumbs a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+  }
+
+  .cat-hub-hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+  }
+
+  @media (max-width: 520px) {
+    .cat-hub-hero__cta {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .cat-hub-hero__cta .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .cat-hub-btn-secondary {
+    background: transparent;
+    color: var(--color-charcoal);
+    border: 2px solid color-mix(in srgb, var(--color-charcoal) 35%, transparent);
+  }
+
+  .cat-hub-btn-secondary:hover {
+    border-color: var(--color-teal-dark);
+    color: var(--color-teal-dark);
+  }
+
+  .lede {
+    font-size: 1.05rem;
+    max-width: 40rem;
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  /* Wider than default `.container` (72rem) so the bento has more horizontal room */
+  .cat-hub-main.container {
+    max-width: 88rem;
+  }
+
+  .cat-hub-h2 {
+    font-family: var(--font-heading);
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    margin: 0 0 var(--space-sm);
+    color: var(--color-charcoal);
+  }
+
+  .cat-hub-lede {
+    margin: 0 0 var(--space-lg);
+    line-height: 1.65;
+    color: color-mix(in srgb, var(--color-charcoal) 88%, transparent);
+  }
+
+  .cat-hub-lede a {
+    color: var(--color-teal-dark);
+    text-underline-offset: 0.15em;
+  }
+
+  /**
+   * 12-column bento (hubBentoLayouts): no frame, light gap only. Taller rows so
+   * more of each photo reads through cover crop. Mobile: single column stack.
+   */
+  .cat-hub-bento {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(0.55rem, 2vw, 0.85rem);
+    margin: 0;
+    align-content: start;
+  }
+
+  @media (min-width: 700px) {
+    .cat-hub-bento {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-auto-rows: minmax(8rem, 1.2fr);
+      gap: clamp(0.65rem, 1.8vw, 1.1rem);
+      box-sizing: border-box;
+    }
+
+    .cat-hub-bento-card {
+      grid-column: var(--bento-cs) / span var(--bento-csp);
+      grid-row: var(--bento-rs) / span var(--bento-rsp);
+      min-height: 0;
+      height: 100%;
+      border-radius: var(--radius-card);
+      aspect-ratio: unset;
+    }
+  }
+
+  .cat-hub-bento-card {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    min-width: 0;
+    text-decoration: none;
+    color: var(--color-white);
+    isolation: isolate;
+    border-radius: var(--radius-card);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  @media (max-width: 699px) {
+    .cat-hub-bento-card {
+      grid-column: 1 / -1 !important;
+      grid-row: auto !important;
+      aspect-ratio: 4 / 3;
+      min-height: clamp(14rem, 42vw, 18rem);
+    }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .cat-hub-bento-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 20px 48px rgb(0 0 0 / 0.12);
+    }
+  }
+
+  .cat-hub-bento-card:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-teal) 55%, transparent), 0 16px 40px rgb(0 0 0 / 0.1);
+    outline: none;
+  }
+
+  .cat-hub-bento-card__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 0;
+  }
+
+  .cat-hub-bento-card__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      165deg,
+      color-mix(in srgb, var(--color-charcoal) 12%, transparent) 0%,
+      color-mix(in srgb, var(--color-charcoal) 55%, transparent) 55%,
+      color-mix(in srgb, var(--color-charcoal) 78%, transparent) 100%
+    );
+    pointer-events: none;
+  }
+
+  .cat-hub-bento-card__body {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: clamp(1rem, 3vw, 1.35rem);
+    gap: 0.35rem;
+  }
+
+  .cat-hub-bento-card__title {
+    font-family: var(--font-heading);
+    font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    line-height: 1.25;
+    color: var(--color-white);
+    text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
+  }
+
+  .cat-hub-bento-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-teal-light) 92%, white);
+  }
+
+  .cat-hub-bento-card__arrow {
+    flex-shrink: 0;
+    opacity: 0.95;
+  }
+
+  .cat-hub-bento-note {
+    margin: var(--space-md) 0 0;
+    max-width: 40rem;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--color-charcoal) 58%, transparent);
+  }
+
+  .cat-hub-related__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm) var(--space-lg);
+  }
+
+  .cat-hub-related__list a {
+    color: var(--color-teal-dark);
+    font-weight: 600;
+    text-underline-offset: 0.15em;
+  }
+</style>

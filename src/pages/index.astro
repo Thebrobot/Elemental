@@ -1,0 +1,1083 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { siteConfig } from "../config/siteConfig";
+import { getTreatmentExplorerCategories } from "../data/treatmentExplorerCategories";
+import TestimonialCarousel from "../islands/TestimonialCarousel.tsx";
+import HomeFaq from "../islands/HomeFaq.tsx";
+import TreatmentCategoryExplorer from "../islands/TreatmentCategoryExplorer.tsx";
+import { getCollection } from "astro:content";
+
+const title = `Med Spa Elkhorn, WI | Injectables, Laser & Wellness | ${siteConfig.name}`;
+const description = siteConfig.description;
+const booking = siteConfig.bookingUrl || "#";
+const bookingIsExternal = booking.startsWith("http");
+
+const exploreCategories = getTreatmentExplorerCategories();
+
+const recentPosts = (await getCollection("blog"))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 4);
+
+const postDateFmt = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+
+/** Full-bleed photo cards (temporary placeholder photography; replace with brand assets). */
+const outcomePhotoCards = [
+  {
+    title: "Soften lines & restore volume",
+    tagline: "Neuromodulators, fillers & PRP mapped to your face, not a template.",
+    hubHref: "/services/injectables/",
+    image: "/images/home-outcomes/home-outcome-injectables.png",
+    ariaLabel: "Injectables: soften lines and restore volume, browse category",
+  },
+  {
+    title: "Clearer tone & smoother texture",
+    tagline: "Facials, peels, IPL & microneedling for your goals and downtime.",
+    hubHref: "/services/skin/",
+    image: "/images/home-outcomes/home-outcome-skin.png",
+    ariaLabel: "Skin and laser: clearer tone and smoother texture, browse category",
+  },
+  {
+    title: "Shape, tighten & feel stronger",
+    tagline: "Body contouring, tightening, laser hair removal & core support.",
+    hubHref: "/services/body/",
+    image: "/images/home-outcomes/home-outcome-body.png",
+    ariaLabel: "Body: shape, tighten, and feel stronger, browse category",
+  },
+  {
+    title: "Weight, hormones & whole-person care",
+    tagline: "Medical weight loss, BHRT, labs, IV therapies & private consults.",
+    hubHref: "/services/wellness/",
+    image: "/images/home-outcomes/home-outcome-wellness.png",
+    ariaLabel: "Wellness: weight, hormones, and whole-person care, browse category",
+  },
+];
+
+const testimonialSlides = [
+  {
+    quote:
+      "The team took time to explain every option and never rushed me. My treatment plan finally feels aligned with my goals.",
+    fig: "Elkhorn patient",
+    tag: "Medical aesthetics",
+  },
+];
+
+const faqCategories = [
+  {
+    id: "general",
+    label: "General",
+    items: [
+      {
+        q: "Where is Elemental Skin & Body Medical Aesthetics located?",
+        a: "We are located in Elkhorn, Wisconsin, the county seat of Walworth County. Patients visit us from Lake Geneva, Delavan, Whitewater, Burlington, Janesville, Kenosha, Racine, and throughout southeast Wisconsin.",
+      },
+      {
+        q: "What is a medical spa (med spa), and how is it different from a day spa?",
+        a: "A medical spa (med spa) combines the relaxing environment of a day spa with physician-overseen, clinical-grade treatments, such as Botox, laser resurfacing, body contouring, and medical weight loss, that are not available at traditional spas. At Elemental Skin & Body, a licensed medical provider supervises all treatments.",
+      },
+      {
+        q: "Do you serve patients outside Elkhorn?",
+        a: "Yes. We regularly see guests from Walworth County, Lake Geneva, Whitewater, Janesville, Kenosha, Racine, Burlington, Mukwonago, East Troy, and surrounding Wisconsin communities within about 40 miles of Elkhorn.",
+      },
+      {
+        q: "What should I bring to my first appointment?",
+        a: "A list of current medications, known allergies, and any recent labs or imaging your provider should review. Arriving a few minutes early to complete intake paperwork is appreciated.",
+      },
+      {
+        q: "How long is a typical visit?",
+        a: "Consultations are typically 30–45 minutes. Treatment visits vary by service; your clinician will give you a time estimate when you book.",
+      },
+    ],
+  },
+  {
+    id: "injectables",
+    label: "Injectables",
+    items: [
+      {
+        q: "What is the difference between Botox and dermal fillers?",
+        a: "Botox and Jeuveau are neuromodulators that relax muscles to soften dynamic wrinkles like frown lines and crow's feet. Dermal fillers (hyaluronic acid or biostimulators) add volume, define contours, and smooth static lines. Many patients benefit from both.",
+      },
+      {
+        q: "Will Botox or Jeuveau look natural?",
+        a: "Yes. We prioritize balanced dosing and muscle-specific placement so you still look like yourself, just refreshed. Over-treatment is never our goal.",
+      },
+      {
+        q: "How long do dermal fillers last?",
+        a: "Longevity depends on the product, the area treated, and your metabolism. Hyaluronic acid fillers typically last 6–18 months; biostimulators like Sculptra can last 2+ years. Your clinician will outline realistic timelines at your consultation.",
+      },
+      {
+        q: "What is a Vampire Facial or Vampire Facelift near me?",
+        a: "A Vampire Facial combines microneedling with PRP (platelet-rich plasma) drawn from your own blood to stimulate collagen and improve skin texture. A Vampire Facelift adds hyaluronic acid filler for volume. Both are available at our Elkhorn, WI location.",
+      },
+    ],
+  },
+  {
+    id: "skin",
+    label: "Skin & laser",
+    items: [
+      {
+        q: "What skin treatments are available at your Elkhorn med spa?",
+        a: "We offer Diamond Glow facials, chemical peels, dermaplaning, IPL photofacials, microneedling, Morpheus8 (RF microneedling), and our signature Elemental Facial, all customized to your skin type and goals.",
+      },
+      {
+        q: "When will I see results after a peel or laser treatment?",
+        a: "Some brightness appears immediately; deeper collagen benefits build over 4–12 weeks. Consistent sun protection and a maintenance schedule extend your results.",
+      },
+      {
+        q: "What is Morpheus8 and is it available near Lake Geneva, WI?",
+        a: "Morpheus8 is a fractional RF microneedling device that remodels skin and subdermal fat for tightening, scar revision, and texture improvement. It is available at our Elkhorn, WI med spa, conveniently located about 15 miles from Lake Geneva.",
+      },
+      {
+        q: "Can I combine Diamond Glow with injectables on the same day?",
+        a: "Often yes, but sequencing matters. Mention everything you are interested in at booking so we can schedule your visit safely and get the most out of each treatment.",
+      },
+    ],
+  },
+  {
+    id: "wellness",
+    label: "Wellness",
+    items: [
+      {
+        q: "Do you offer medical weight loss near Janesville or Kenosha, WI?",
+        a: "Yes. Our medical weight loss program, including GLP-1 peptides and metabolic support, is available at our Elkhorn, WI office, which is roughly 25 miles from Janesville and 30 miles from Kenosha.",
+      },
+      {
+        q: "What is bioidentical hormone replacement therapy (BHRT)?",
+        a: "BHRT uses hormones that are chemically identical to those your body produces to address imbalances related to menopause, andropause, thyroid, and adrenal health. We use labs and follow-up testing to personalize every protocol.",
+      },
+      {
+        q: "Do you offer hormone labs and wellness testing?",
+        a: "Yes. Comprehensive wellness labs help us personalize hormone, weight, and peptide protocols. Follow-up testing ensures your plan stays dialed in over time.",
+      },
+      {
+        q: "Are IV therapies and peptides customized?",
+        a: "Every IV blend and peptide protocol is selected after reviewing your goals, hydration status, and medical history. Common options include NAD+, glutathione, vitamin C, B-complex, and targeted peptide therapies.",
+      },
+    ],
+  },
+];
+
+// FAQPage schema for Google FAQ rich results: built from homepage FAQ content
+const faqPageLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqCategories.flatMap((cat) =>
+    cat.items.map((item) => ({
+      "@type": "Question",
+      name: item.q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.a,
+      },
+    }))
+  ),
+};
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  includeLocalBusiness
+  jsonLd={faqPageLd}
+  ogImage="/images/home-hero.png"
+>
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="hero__media" aria-hidden="true">
+      <img
+        class="hero__media-img"
+        src="/images/home-hero.png"
+        alt=""
+        width="1920"
+        height="1080"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </div>
+    <div class="hero__scrim" aria-hidden="true"></div>
+    <div class="hero__overlay" aria-hidden="true"></div>
+    <div class="container hero__inner">
+      <p class="hero__kicker">
+        Physician-led med spa · {siteConfig.address.city}, {siteConfig.address.state}
+      </p>
+      <h1 id="hero-heading" class="hero__headline">
+        <span class="hero__headline-pre">Empowering Your</span>
+        <span class="hero__headline-em">Unique Beauty</span>
+      </h1>
+      <p class="hero__tagline">
+        We provide personalized, science-backed aesthetic treatments designed to enhance your natural beauty and confidence.
+      </p>
+      <div class="hero__cta-row">
+        <a
+          class="btn btn--hero-primary"
+          href={booking}
+          target={bookingIsExternal ? "_blank" : undefined}
+          rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+        >
+          {siteConfig.bookingLabel}
+        </a>
+        <a class="btn btn--hero-secondary" href="/where-to-start">Where to start</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream" id="services" aria-labelledby="services-heading">
+    <div class="container">
+      <p class="kicker">Our services</p>
+      <h2 id="services-heading" class="section-h2">Treatments designed around your goals</h2>
+      <p class="outcome-photo-section__lede">
+        Hover a photo to explore, or jump to <a href="/where-to-start">Where to start</a> if you are not sure which category fits.
+      </p>
+      <div class="outcome-photo-grid">
+        {
+          outcomePhotoCards.map((card) => (
+            <a class="outcome-photo-card" href={card.hubHref} aria-label={card.ariaLabel}>
+              <img
+                class="outcome-photo-card__img"
+                src={card.image}
+                alt=""
+                width="600"
+                height="800"
+                loading="eager"
+                decoding="async"
+              />
+              <span class="outcome-photo-card__scrim" aria-hidden="true" />
+              <span class="outcome-photo-card__border-glow" aria-hidden="true" />
+              <div class="outcome-photo-card__content">
+                <h3 class="outcome-photo-card__title">{card.title}</h3>
+                <p class="outcome-photo-card__tagline">{card.tagline}</p>
+                <span class="outcome-photo-card__cta">
+                  Explore
+                  <svg class="outcome-photo-card__cta-arrow" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </span>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+      <div class="treatment-directory-block" id="treatment-directory">
+        <p class="kicker kicker--dark">Treatment directory</p>
+        <h3 class="treatment-directory-block__h">Browse every treatment by category</h3>
+        <p class="catalog-lede">
+          Pick a category to scan all names at once. Each link opens the full treatment guide; the hub adds a one-line preview for everything in that group.
+        </p>
+        <TreatmentCategoryExplorer client:load categories={exploreCategories} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--approach" aria-labelledby="approach-heading">
+    <div class="container approach-grid">
+      <div class="approach__copy">
+        <p class="kicker">Our approach</p>
+        <h2 id="approach-heading" class="section-h2">Medical-grade results with a calm, educational experience</h2>
+        <p class="approach__lede">
+          We listen first, map a plan that respects your downtime and budget, and deliver treatments using technology and products chosen for safety and efficacy.
+        </p>
+        <div class="pillar-list">
+          <div class="pillar">
+            <h3>Precision</h3>
+            <p>Advanced devices and injectable techniques tailored to your anatomy-not a one-size template.</p>
+          </div>
+          <div class="pillar">
+            <h3>Transparency</h3>
+            <p>Clear expectations on visits, pricing conversations, and aftercare so you always know what comes next.</p>
+          </div>
+          <div class="pillar">
+            <h3>Continuity</h3>
+            <p>Skin, body, and wellness services live under one roof for cohesive, long-term support.</p>
+          </div>
+        </div>
+        <a
+          class="btn"
+          href={booking}
+          target={bookingIsExternal ? "_blank" : undefined}
+          rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+        >
+          {siteConfig.bookingLabel}
+        </a>
+      </div>
+      <figure class="approach__visual">
+        <img
+          class="approach__img"
+          src="/images/approach-section.jpg"
+          alt="Calm med spa suite with soft daylight, neutral decor, and treatment seating, reflecting a thoughtful, educational visit."
+          width={1000}
+          height={704}
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="testimonials-heading">
+    <div class="container">
+      <p class="kicker kicker--dark">Testimonials</p>
+      <h2 id="testimonials-heading" class="section-h2">What our patients say</h2>
+      <TestimonialCarousel client:load quotes={testimonialSlides} />
+    </div>
+  </section>
+
+  <section class="section section--cream" aria-labelledby="blog-heading">
+    <div class="container">
+      <p class="kicker">Stay informed</p>
+      <h2 id="blog-heading" class="section-h2">Education from our Elkhorn team</h2>
+      <p class="blog-lede">Treatment explainers, skin and laser insights, and wellness updates from our clinical team.</p>
+      <div class="blog-card-grid">
+        {
+          recentPosts.map((post) => (
+            <article class="blog-preview-card">
+              <a class="blog-preview-card__img-link" href={`/blog/${post.id}/`} tabindex="-1" aria-hidden="true">
+                <img
+                  class="blog-preview-card__img"
+                  src={post.data.heroImage}
+                  alt=""
+                  width="640"
+                  height="400"
+                  loading="lazy"
+                />
+              </a>
+              <div class="blog-preview-card__body">
+                <time class="blog-preview-card__date" datetime={post.data.pubDate.toISOString()}>
+                  {postDateFmt.format(post.data.pubDate)}
+                </time>
+                <h3 class="blog-preview-card__title">
+                  <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+                </h3>
+                <p class="blog-preview-card__excerpt">{post.data.description}</p>
+                <a class="blog-preview-card__read" href={`/blog/${post.id}/`}>
+                  Read article
+                  <svg class="service-card__arrow" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+      <div class="blog-cta">
+        <a class="btn" href="/blog">View all articles</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cta-band" aria-labelledby="cta-band-heading">
+    <div class="container cta-band__inner">
+      <h2 id="cta-band-heading">Ready when you are</h2>
+      <p>Book a consultation at our Elkhorn, WI med spa or send a message. We serve patients from Lake Geneva, Janesville, Kenosha, and throughout southeast Wisconsin.</p>
+      <div class="cta-band__actions">
+        <a
+          class="btn btn--on-teal"
+          href={booking}
+          target={bookingIsExternal ? "_blank" : undefined}
+          rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+        >
+          {siteConfig.bookingLabel}
+        </a>
+        <a class="btn btn--ghost-light" href="/contact">Contact us</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper" aria-labelledby="faq-heading">
+    <div class="container">
+      <p class="kicker kicker--dark">FAQ</p>
+      <h2 id="faq-heading" class="section-h2">How can we help?</h2>
+      <HomeFaq client:load categories={faqCategories} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    min-height: min(82vh, 760px);
+    display: flex;
+    align-items: center;
+    /* Pull hero up so sticky header pill overlaps hero gradient */
+    margin-top: -6.35rem;
+    padding-top: calc(6.35rem + clamp(4.5rem, 12vw, 6rem));
+    padding-bottom: clamp(4.5rem, 12vw, 6rem);
+    background: var(--color-charcoal);
+  }
+
+  .hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .hero__media-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 72% 42%;
+  }
+
+  @media (max-width: 900px) {
+    .hero__media-img {
+      object-position: 60% center;
+    }
+  }
+
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      105deg,
+      color-mix(in srgb, var(--color-charcoal) 92%, transparent) 0%,
+      color-mix(in srgb, var(--color-charcoal) 78%, transparent) 28%,
+      color-mix(in srgb, var(--color-teal-muted) 38%, var(--color-charcoal) 62%) 52%,
+      rgb(18 18 18 / 0.25) 100%
+    );
+  }
+
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: radial-gradient(ellipse 90% 70% at 18% 35%, rgb(255 255 255 / 0.07), transparent 52%);
+  }
+
+  .hero__inner {
+    position: relative;
+    z-index: 3;
+    max-width: min(46rem, 100%);
+  }
+
+  .hero__kicker {
+    margin: 0 0 1.1rem;
+    max-width: 36rem;
+    font-size: clamp(0.72rem, 1.35vw, 0.8rem);
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--color-teal-light) 92%, white);
+    text-shadow: 0 1px 18px rgb(0 0 0 / 0.35);
+  }
+
+  .hero__kicker::after {
+    content: "";
+    display: block;
+    width: 2.75rem;
+    height: 2px;
+    margin-top: 0.85rem;
+    border-radius: 1px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-teal) 85%, transparent),
+      transparent
+    );
+  }
+
+  .hero__headline {
+    margin: 0 0 var(--space-lg);
+    color: var(--color-white);
+    text-transform: none;
+    letter-spacing: 0.02em;
+    line-height: 1.06;
+    font-weight: 700;
+    text-shadow:
+      0 2px 32px rgb(0 0 0 / 0.45),
+      0 1px 3px rgb(0 0 0 / 0.35);
+  }
+
+  .hero__headline-pre {
+    display: block;
+    font-size: clamp(1.55rem, 4.5vw, 2.45rem);
+    font-weight: 600;
+    letter-spacing: 0.025em;
+    margin-bottom: 0.18em;
+    color: rgba(255, 255, 255, 0.96);
+  }
+
+  .hero__headline-em {
+    display: block;
+    font-family: var(--font-accent);
+    font-size: clamp(2.75rem, 8.5vw, 4.5rem);
+    font-style: italic;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.02;
+  }
+
+  .hero__tagline {
+    margin: 0 0 var(--space-lg);
+    font-size: clamp(1.06rem, 2.35vw, 1.28rem);
+    font-weight: 500;
+    line-height: 1.65;
+    letter-spacing: 0.01em;
+    color: rgba(255, 255, 255, 0.92);
+    max-width: 40rem;
+    text-shadow: 0 1px 20px rgb(0 0 0 / 0.35);
+  }
+
+  .hero__cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    align-items: center;
+  }
+
+  @media (max-width: 520px) {
+    .hero__cta-row {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .hero__cta-row .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .btn--hero-primary {
+    background: var(--color-teal);
+    color: var(--color-white);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  .btn--hero-primary:hover {
+    background: color-mix(in srgb, var(--color-teal) 88%, black);
+  }
+
+  .btn--hero-secondary {
+    background: rgba(255, 255, 255, 0.12);
+    border: 1.5px solid rgba(255, 255, 255, 0.55);
+    color: var(--color-white);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: var(--radius-cta);
+    transition: background 0.2s ease;
+  }
+
+  .btn--hero-secondary:hover {
+    background: rgba(255, 255, 255, 0.22);
+  }
+
+  .kicker {
+    margin: 0 0 0.4rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+
+  .kicker--dark {
+    color: var(--color-teal-muted);
+  }
+
+  .section-h2 {
+    margin-top: 0;
+    margin-bottom: var(--space-lg);
+    font-size: clamp(1.6rem, 3.5vw, 2.25rem);
+    color: var(--color-charcoal);
+    text-transform: none;
+    letter-spacing: 0.02em;
+    position: relative;
+    padding-bottom: var(--space-xs);
+  }
+
+  .section-h2::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 3rem;
+    height: 2px;
+    background: var(--color-teal);
+    border-radius: 1px;
+  }
+
+  .outcome-photo-section__lede {
+    margin: 0 0 var(--space-lg);
+    max-width: 44rem;
+    font-size: 1.02rem;
+    line-height: 1.65;
+    color: color-mix(in srgb, var(--color-charcoal) 78%, white);
+  }
+
+  .outcome-photo-section__lede a {
+    font-weight: 600;
+    color: var(--color-teal-muted);
+  }
+
+  .outcome-photo-section__lede a:hover {
+    color: var(--color-teal);
+  }
+
+  .outcome-photo-grid {
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: 1fr;
+  }
+
+  @media (min-width: 640px) {
+    .outcome-photo-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .outcome-photo-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  .outcome-photo-card {
+    position: relative;
+    display: block;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    aspect-ratio: 3 / 4;
+    min-height: 16rem;
+    box-shadow: var(--shadow-card);
+    border: 1px solid var(--color-border-subtle);
+    text-decoration: none;
+    color: inherit;
+    isolation: isolate;
+    transition:
+      box-shadow 0.4s ease,
+      transform 0.4s ease;
+  }
+
+  .outcome-photo-card:hover,
+  .outcome-photo-card:focus-visible {
+    box-shadow: 0 20px 48px rgb(0 0 0 / 0.14);
+    transform: translateY(-3px);
+  }
+
+  .outcome-photo-card:focus-visible {
+    outline: 2px solid var(--color-teal);
+    outline-offset: 3px;
+  }
+
+  .outcome-photo-card__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scale(1);
+    transition: transform 0.65s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+
+  .outcome-photo-card:hover .outcome-photo-card__img,
+  .outcome-photo-card:focus-visible .outcome-photo-card__img {
+    transform: scale(1.08);
+  }
+
+  .outcome-photo-card__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      to top,
+      rgb(18 18 18 / 0.88) 0%,
+      rgb(18 18 18 / 0.45) 38%,
+      rgb(18 18 18 / 0.08) 62%,
+      transparent 100%
+    );
+    transition: opacity 0.45s ease;
+    pointer-events: none;
+  }
+
+  .outcome-photo-card:hover .outcome-photo-card__scrim,
+  .outcome-photo-card:focus-visible .outcome-photo-card__scrim {
+    opacity: 0.92;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-charcoal) 92%, transparent) 0%,
+      color-mix(in srgb, var(--color-teal-muted) 42%, transparent) 45%,
+      rgb(18 18 18 / 0.12) 70%,
+      transparent 100%
+    );
+  }
+
+  .outcome-photo-card__border-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.12);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  .outcome-photo-card:hover .outcome-photo-card__border-glow,
+  .outcome-photo-card:focus-visible .outcome-photo-card__border-glow {
+    opacity: 1;
+    box-shadow:
+      inset 0 0 0 1px rgb(255 255 255 / 0.22),
+      inset 0 -3rem 4rem -2rem color-mix(in srgb, var(--color-teal) 35%, transparent);
+  }
+
+  .outcome-photo-card__content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 3;
+    padding: var(--space-md);
+    transform: translateY(0);
+    transition: transform 0.45s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+
+  .outcome-photo-card:hover .outcome-photo-card__content,
+  .outcome-photo-card:focus-visible .outcome-photo-card__content {
+    transform: translateY(-6px);
+  }
+
+  .outcome-photo-card__title {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-accent);
+    font-size: clamp(1.05rem, 2.2vw, 1.2rem);
+    font-style: italic;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--color-white);
+    line-height: 1.25;
+    text-shadow: 0 1px 12px rgb(0 0 0 / 0.35);
+  }
+
+  .outcome-photo-card__tagline {
+    margin: 0 0 var(--space-sm);
+    font-size: 0.82rem;
+    line-height: 1.5;
+    color: rgb(255 255 255 / 0.88);
+    max-width: 16rem;
+    text-shadow: 0 1px 8px rgb(0 0 0 / 0.4);
+  }
+
+  .outcome-photo-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.95);
+    border-bottom: 1px solid rgb(255 255 255 / 0.35);
+    padding-bottom: 0.15rem;
+    transition:
+      color 0.25s ease,
+      border-color 0.25s ease,
+      gap 0.25s ease;
+  }
+
+  .outcome-photo-card:hover .outcome-photo-card__cta,
+  .outcome-photo-card:focus-visible .outcome-photo-card__cta {
+    color: var(--color-white);
+    border-bottom-color: color-mix(in srgb, var(--color-teal-light) 80%, white);
+    gap: 0.5rem;
+  }
+
+  .outcome-photo-card__cta-arrow {
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .outcome-photo-card:hover .outcome-photo-card__cta-arrow,
+  .outcome-photo-card:focus-visible .outcome-photo-card__cta-arrow {
+    transform: translateX(4px);
+  }
+
+  .treatment-directory-block {
+    margin-top: var(--space-xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-border-subtle);
+  }
+
+  .treatment-directory-block__h {
+    margin: 0 0 var(--space-sm);
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-teal-muted);
+  }
+
+  .catalog-lede {
+    max-width: 40rem;
+    margin: 0 0 var(--space-lg);
+    font-size: 1.02rem;
+    line-height: 1.65;
+    color: color-mix(in srgb, var(--color-charcoal) 78%, white);
+  }
+
+  .section--approach {
+    background: var(--color-white);
+  }
+
+  .approach-grid {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: center;
+  }
+
+  @media (min-width: 900px) {
+    .approach-grid {
+      grid-template-columns: 1fr 0.85fr;
+    }
+  }
+
+  .approach__lede {
+    font-size: 1.02rem;
+    max-width: 36rem;
+    margin-bottom: var(--space-md);
+  }
+
+  .pillar-list {
+    display: grid;
+    gap: var(--space-md);
+    margin: var(--space-md) 0 var(--space-lg);
+  }
+
+  @media (min-width: 600px) {
+    .pillar-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .pillar h3 {
+    margin: 0 0 0.35rem;
+    font-size: 1.05rem;
+    color: var(--color-teal);
+  }
+
+  .pillar p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: color-mix(in srgb, var(--color-charcoal) 75%, white);
+  }
+
+  .approach__visual {
+    display: none;
+    margin: 0;
+  }
+
+  @media (min-width: 900px) {
+    .approach__visual {
+      display: block;
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      min-height: 22rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .approach__img {
+      width: 100%;
+      height: 100%;
+      min-height: 22rem;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+  }
+
+  .blog-lede {
+    max-width: 36rem;
+    margin: 0 0 var(--space-lg);
+    font-size: 1.02rem;
+  }
+
+  .blog-card-grid {
+    display: grid;
+    gap: var(--space-md);
+    grid-template-columns: 1fr;
+    margin-bottom: var(--space-lg);
+  }
+
+  @media (min-width: 640px) {
+    .blog-card-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1100px) {
+    .blog-card-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .blog-preview-card {
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    background: var(--color-white);
+    border: 1px solid var(--color-border-subtle);
+    box-shadow: var(--shadow-card);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .blog-preview-card__img-link {
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--color-paper-cool);
+  }
+
+  .blog-preview-card__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .blog-preview-card__body {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    flex: 1;
+  }
+
+  .blog-preview-card__date {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-teal-muted);
+  }
+
+  .blog-preview-card__title {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    line-height: 1.3;
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  .blog-preview-card__title a {
+    color: var(--color-charcoal);
+    text-decoration: none;
+  }
+
+  .blog-preview-card__title a:hover {
+    color: var(--color-teal-muted);
+  }
+
+  .blog-preview-card__excerpt {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--color-charcoal) 72%, white);
+    flex: 1;
+  }
+
+  .blog-preview-card__read {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: var(--space-sm);
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-teal);
+  }
+
+  .blog-preview-card__read:hover {
+    color: var(--color-teal-muted);
+  }
+
+  .blog-cta {
+    margin-top: 0;
+  }
+
+  .section--cta-band {
+    background: var(--color-teal);
+    color: var(--color-white);
+    text-align: center;
+    padding-block: clamp(3rem, 7vw, 4.5rem);
+  }
+
+  .cta-band__inner {
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+
+  .section--cta-band h2 {
+    color: var(--color-white);
+    margin-bottom: var(--space-sm);
+  }
+
+  .section--cta-band h2::after {
+    display: none;
+  }
+
+  .section--cta-band p {
+    margin: 0 0 var(--space-lg);
+    font-size: 1.05rem;
+    opacity: 0.92;
+    line-height: 1.65;
+  }
+
+  .cta-band__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    justify-content: center;
+  }
+
+  @media (max-width: 520px) {
+    .cta-band__actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .cta-band__actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .btn--on-teal {
+    background: var(--color-white);
+    color: var(--color-teal);
+    font-weight: 700;
+  }
+
+  .btn--on-teal:hover {
+    background: color-mix(in srgb, var(--color-white) 90%, var(--color-teal));
+    color: var(--color-teal-muted);
+  }
+
+  .btn--ghost-light {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    color: var(--color-white);
+  }
+
+  .btn--ghost-light:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--color-white);
+  }
+</style>

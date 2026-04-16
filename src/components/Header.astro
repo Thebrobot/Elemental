@@ -1,0 +1,507 @@
+---
+import { siteConfig } from "../config/siteConfig";
+
+const booking = siteConfig.bookingUrl || "#";
+const mega = siteConfig.nav.serviceMegaColumns;
+const pathname = Astro.url.pathname.replace(/\/$/, "") || "/";
+const bookingIsExternal = booking.startsWith("http");
+
+function isActive(href: string): boolean {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+
+const [navHome, navAbout, navBlog] = siteConfig.nav.main;
+---
+
+<div class="site-header-shell">
+  <header class="site-header">
+    <div class="site-header__bar">
+      <a class="site-logo" href="/" aria-label={siteConfig.name}>
+        <img
+          class="site-logo__img"
+          src="https://assets.cdn.filesafe.space/sg6GOaZxcaTTzQL7krbU/media/69dffbdfdb7c222f716c9b32.png"
+          width="592"
+          height="169"
+          alt="Elemental Skin &amp; Body Medical Aesthetics logo"
+          loading="eager"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </a>
+
+      <details class="nav-mobile">
+        <summary class="nav-mobile__toggle" aria-label="Open menu">
+          <span class="nav-mobile__icon">&#9776;</span>
+          Menu
+        </summary>
+        <nav class="nav-mobile__panel" aria-label="Mobile">
+          <ul class="nav-list">
+            <li>
+              <a class:list={{ "nav-link--active": isActive(navHome.href) }} href={navHome.href}>{navHome.label}</a>
+            </li>
+            <li>
+              <a class:list={{ "nav-link--active": isActive(navAbout.href) }} href={navAbout.href}>{navAbout.label}</a>
+            </li>
+            <li>
+              <span class="nav-mobile__services-label">Services</span>
+            </li>
+            {
+              mega.map((col) => (
+                <div class="nav-mega-block">
+                  <p class="nav-mega-block__label">{col.label}</p>
+                  {col.sections.map((group) => (
+                    <ul class="nav-list nav-list--compact">
+                      {group.items.map((s) => (
+                        <li>
+                          <a href={s.href}>{s.label}</a>
+                        </li>
+                      ))}
+                    </ul>
+                  ))}
+                </div>
+              ))
+            }
+            <li>
+              <a class:list={{ "nav-link--active": isActive(navBlog.href) }} href={navBlog.href}>{navBlog.label}</a>
+            </li>
+          </ul>
+          <div class="nav-mobile__cta">
+            <a class="btn btn--visit btn--block" href="/contact">
+              Contact Us
+            </a>
+            <a
+              class="btn btn--book-solid btn--block"
+              href={booking}
+              target={bookingIsExternal ? "_blank" : undefined}
+              rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+            >
+              {siteConfig.bookingLabel}
+              <svg class="btn__ext" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M7 17L17 7M7 7h10v10"></path>
+              </svg>
+            </a>
+          </div>
+        </nav>
+      </details>
+
+      <nav class="nav-desktop" aria-label="Primary">
+        <ul class="nav-list nav-list--row">
+          <li>
+            <a class:list={["nav-pill", { "nav-pill--active": isActive(navHome.href) }]} href={navHome.href}>{navHome.label}</a>
+          </li>
+          <li>
+            <a class:list={["nav-pill", { "nav-pill--active": isActive(navAbout.href) }]} href={navAbout.href}>{navAbout.label}</a>
+          </li>
+          <li class="nav-dropdown">
+            <span class="nav-dropdown__label">
+              Services
+              <svg class="nav-chevron" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+                <path d="M3 4.5 6 7.5 9 4.5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </span>
+            <div class="nav-dropdown__mega">
+              {
+                mega.map((col) => (
+                  <div class="mega-col">
+                    <p class="mega-col__pillar">{col.label}</p>
+                    {col.sections.map((sec) => (
+                      <ul>
+                        {sec.items.map((s) => (
+                          <li>
+                            <a href={s.href}>{s.label}</a>
+                          </li>
+                        ))}
+                      </ul>
+                    ))}
+                  </div>
+                ))
+              }
+            </div>
+          </li>
+          <li>
+            <a class:list={["nav-pill", { "nav-pill--active": isActive(navBlog.href) }]} href={navBlog.href}>{navBlog.label}</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="site-header__cta">
+        <a class="btn btn--visit" href="/contact">
+          Contact Us
+        </a>
+        <a
+          class="btn btn--book-solid"
+          href={booking}
+          target={bookingIsExternal ? "_blank" : undefined}
+          rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+        >
+          {siteConfig.bookingLabel}
+          <svg class="btn__ext" width="14" height="14" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M7 17L17 7M7 7h10v10"></path>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </header>
+</div>
+
+<style>
+  .site-header-shell {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding-top: max(0.85rem, env(safe-area-inset-top, 0px));
+    padding-right: max(1rem, env(safe-area-inset-right, 0px));
+    padding-bottom: 0.35rem;
+    padding-left: max(1rem, env(safe-area-inset-left, 0px));
+    pointer-events: none;
+  }
+
+  .site-header {
+    max-width: calc(var(--max-width) + 2rem);
+    margin: 0 auto;
+    pointer-events: auto;
+  }
+
+  .site-header__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    padding: 0.55rem 1rem 0.55rem 0.85rem;
+    background: var(--color-white);
+    border-radius: 999px;
+    box-shadow: var(--shadow-dropdown);
+    border: 1px solid color-mix(in srgb, var(--color-border-subtle) 65%, transparent);
+  }
+
+  .site-logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: inherit;
+    min-width: 0;
+    /* Logo mark - keep bar light so artwork stays visible */
+    background: var(--color-white);
+    border-radius: 0.5rem;
+    padding: 0.15rem 0.25rem 0.15rem 0.15rem;
+  }
+
+  .site-logo__img {
+    display: block;
+  }
+
+  .site-header__cta {
+    flex-shrink: 0;
+    display: none;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .btn--visit {
+    background: color-mix(in srgb, var(--color-white) 88%, var(--color-teal));
+    color: var(--color-teal);
+    border: 1px solid color-mix(in srgb, var(--color-teal) 22%, transparent);
+    padding: 0.55rem 1rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    white-space: nowrap;
+    transition: background 0.2s ease;
+  }
+
+  .btn--visit:hover {
+    background: color-mix(in srgb, var(--color-white) 70%, var(--color-teal));
+  }
+
+  .btn--book-solid {
+    background: var(--color-teal);
+    color: var(--color-white);
+    padding: 0.55rem 0.95rem;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: none;
+    transition: background 0.2s ease;
+  }
+
+  .btn--book-solid:hover {
+    background: var(--color-teal-muted);
+    color: var(--color-white);
+  }
+
+  .btn__ext {
+    flex-shrink: 0;
+    opacity: 0.95;
+  }
+
+  .nav-desktop {
+    display: none;
+    flex: 1;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-list--row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.1rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-list--row > li {
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-pill {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-charcoal);
+    text-decoration: none;
+    padding: 0.42rem 0.75rem;
+    border-radius: 999px;
+    transition:
+      background 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .nav-pill:hover {
+    background: color-mix(in srgb, var(--color-teal) 10%, transparent);
+    color: var(--color-teal-muted);
+  }
+
+  .nav-pill--active {
+    background: var(--color-teal);
+    color: var(--color-white);
+  }
+
+  .nav-pill--active:hover {
+    background: color-mix(in srgb, var(--color-teal) 88%, black);
+    color: var(--color-white);
+  }
+
+  .nav-dropdown {
+    position: relative;
+  }
+
+  .nav-dropdown__label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    line-height: 1;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-charcoal);
+    padding: 0.42rem 0.75rem;
+    border-radius: 999px;
+    cursor: default;
+    user-select: none;
+    transition: background 0.15s ease;
+  }
+
+  .nav-dropdown:hover .nav-dropdown__label,
+  .nav-dropdown:focus-within .nav-dropdown__label {
+    background: color-mix(in srgb, var(--color-teal) 10%, transparent);
+  }
+
+  .nav-chevron {
+    flex-shrink: 0;
+    opacity: 0.75;
+  }
+
+  .nav-dropdown__mega {
+    display: none;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    /* Flush with trigger - a gap lets the cursor leave .nav-dropdown and closes the menu */
+    top: 100%;
+    padding: var(--space-md);
+    padding-top: calc(var(--space-md) + 0.35rem);
+    background: var(--color-white);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-dropdown);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-md);
+    min-width: min(96vw, 56rem);
+  }
+
+  .nav-dropdown:hover .nav-dropdown__mega,
+  .nav-dropdown:focus-within .nav-dropdown__mega {
+    display: grid;
+  }
+
+  @media (max-width: 1100px) {
+    .nav-dropdown__mega {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      min-width: min(92vw, 28rem);
+    }
+  }
+
+  .mega-col__pillar {
+    margin: 0 0 var(--space-sm);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+    border-bottom: 1px solid var(--color-border-subtle);
+    padding-bottom: 0.35rem;
+  }
+
+  .mega-col ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mega-col li {
+    margin-bottom: 0.3rem;
+  }
+
+  .mega-col a {
+    font-size: 0.82rem;
+    text-decoration: none;
+    color: var(--color-charcoal);
+  }
+
+  .mega-col a:hover {
+    color: var(--color-teal);
+  }
+
+  .nav-mobile {
+    margin-left: auto;
+    position: relative;
+  }
+
+  .nav-mobile__toggle {
+    cursor: pointer;
+    list-style: none;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.68rem;
+    color: var(--color-teal);
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.5rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--color-teal) 25%, transparent);
+    background: color-mix(in srgb, var(--color-teal) 6%, var(--color-white));
+  }
+
+  .nav-mobile__toggle::-webkit-details-marker {
+    display: none;
+  }
+
+  .nav-mobile__icon {
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+
+  .nav-mobile__panel {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 0.5rem);
+    width: min(92vw, 22rem);
+    max-height: 80vh;
+    overflow: auto;
+    padding: var(--space-md);
+    background: var(--color-white);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 1rem;
+    box-shadow: var(--shadow-dropdown);
+  }
+
+  .nav-mobile__panel a {
+    color: var(--color-charcoal);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  .nav-link--active {
+    color: var(--color-teal);
+  }
+
+  .nav-mobile__services-label {
+    display: block;
+    margin-top: var(--space-sm);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-teal-muted);
+  }
+
+  .nav-list--compact li {
+    margin-bottom: 0.25rem;
+  }
+
+  .nav-mega-block__label {
+    margin: var(--space-sm) 0 var(--space-xs);
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+
+  .nav-mobile__cta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: var(--space-md);
+  }
+
+  .btn--block {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+    padding: 0.75rem;
+  }
+
+  @media (min-width: 1080px) {
+    .nav-mobile {
+      display: none;
+    }
+
+    .nav-desktop {
+      display: flex;
+    }
+
+    .site-header__cta {
+      display: flex;
+    }
+
+  }
+</style>

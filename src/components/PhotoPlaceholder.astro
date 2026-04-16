@@ -1,0 +1,113 @@
+---
+/**
+ * Labeled box for future photography - describes shot type for designers/photographers.
+ * Not decorative: use aria-label for assistive tech; visible caption explains the slot.
+ */
+interface Props {
+  /** Short heading inside the box (e.g. "HERO") */
+  label?: string;
+  /** Full instructions for what image belongs here */
+  caption: string;
+  variant?: "hero" | "card" | "avatar" | "banner";
+}
+
+const { label = "Photo", caption, variant = "card" } = Astro.props;
+---
+
+<div
+  class:list={["ph", variant && `ph--${variant}`]}
+  role="img"
+  aria-label={caption}
+>
+  <span class="ph__label">{label}</span>
+  <p class="ph__caption">{caption}</p>
+</div>
+
+<style>
+  .ph {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: var(--space-xs, 0.5rem);
+    padding: var(--space-sm, 1rem);
+    border: 2px dashed var(--color-teal);
+    background: color-mix(in srgb, var(--color-teal-light) 22%, var(--color-white));
+    color: var(--color-charcoal);
+    min-height: 8rem;
+    border-radius: 6px;
+  }
+
+  .ph--hero {
+    min-height: 100%;
+    width: 100%;
+    border-radius: 0;
+    border-width: 0;
+    border: none;
+    background: color-mix(in srgb, var(--color-blue-slate) 40%, var(--color-charcoal));
+    color: var(--color-white);
+    outline: 2px dashed rgb(255 255 255 / 0.28);
+    outline-offset: -14px;
+    padding: clamp(1.5rem, 4vw, 3rem);
+  }
+
+  .ph--hero .ph__label {
+    color: var(--color-teal-light);
+  }
+
+  .ph--hero .ph__caption {
+    color: rgb(255 255 255 / 0.92);
+    max-width: 36rem;
+  }
+
+  .ph--banner {
+    min-height: 12rem;
+    width: 100%;
+  }
+
+  .ph--card {
+    min-height: 10rem;
+  }
+
+  .ph--avatar {
+    min-height: 4rem;
+    width: 4rem;
+    min-width: 4rem;
+    border-radius: 999px;
+    padding: 0.35rem;
+  }
+
+  .ph--avatar .ph__caption {
+    display: none;
+  }
+
+  .ph--avatar .ph__label {
+    font-size: 0.55rem;
+    line-height: 1.2;
+  }
+
+  .ph__label {
+    font-family: var(--font-body, system-ui);
+    font-weight: 700;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-teal-muted);
+  }
+
+  .ph--hero .ph__label {
+    font-size: 0.75rem;
+  }
+
+  .ph__caption {
+    margin: 0;
+    font-size: 0.8rem;
+    line-height: 1.45;
+    max-width: 28rem;
+  }
+
+  .ph--hero .ph__caption {
+    font-size: clamp(0.8rem, 1.6vw, 0.95rem);
+  }
+</style>

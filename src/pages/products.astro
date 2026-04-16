@@ -1,0 +1,86 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { siteConfig } from "../config/siteConfig";
+import CategoryLineIcon from "../components/CategoryLineIcon.astro";
+
+const title = `Products | ${siteConfig.name} - Elkhorn, WI`;
+const description = `Browse professional skincare and retail products available at ${siteConfig.name} in Elkhorn, WI. [PLACEHOLDER - client to provide inventory details.]`;
+const booking = siteConfig.bookingUrl || "#";
+const bookingIsExternal = booking.startsWith("http");
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="section section--slate">
+    <div class="container products-hero__inner">
+      <div class="products-hero__icon" aria-hidden="true">
+        <CategoryLineIcon variant="products" loading="eager" />
+      </div>
+      <h1>Products</h1>
+      <p class="lead">
+        Medical-grade skincare and curated retail items support your treatment plan. Inventory is updated
+        regularly-visit us in Elkhorn or ask during your appointment.
+      </p>
+      <a
+        class="btn"
+        href={booking}
+        target={bookingIsExternal ? "_blank" : undefined}
+        rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+      >
+        {siteConfig.bookingLabel}
+      </a>
+    </div>
+  </section>
+
+  <section class="section section--cream">
+    <div class="container">
+      <h2>Coming soon</h2>
+      <p>
+        [PLACEHOLDER - client to provide] Product list, brands, and pricing will be added after inventory is
+        confirmed.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .products-hero__inner {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  @media (min-width: 600px) {
+    .products-hero__inner {
+      flex-direction: row;
+      align-items: center;
+      gap: var(--space-md);
+    }
+  }
+
+  .products-hero__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5rem;
+    height: 5rem;
+    flex-shrink: 0;
+    padding: 0.35rem;
+    border-radius: 12px;
+    background: var(--color-white);
+    box-shadow: 0 6px 24px rgb(0 0 0 / 0.12);
+  }
+
+  .products-hero__icon :global(.category-mark) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .products-hero__inner h1 {
+    margin: 0;
+  }
+
+  .lead {
+    max-width: 40rem;
+  }
+</style>

@@ -1,0 +1,1028 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import PhotoPlaceholder from "../components/PhotoPlaceholder.astro";
+import type { ServiceDefinition } from "../data/serviceRegistry";
+import {
+  categoryLabels,
+  getRelatedServices,
+  whereToStartAnchorForCategory,
+} from "../data/serviceRegistry";
+import { hubTileImageSrc } from "../data/serviceHubBento";
+import { resolveBodySlotSrc, resolveResultSlotSrc } from "../data/serviceSlotImages";
+import { siteConfig, areaServed } from "../config/siteConfig";
+
+interface Props {
+  service: ServiceDefinition;
+}
+
+const { service } = Astro.props;
+const title = `${service.name} | ${siteConfig.name} - Elkhorn, WI`;
+const description = service.metaDescription;
+const canonicalPath = `/services/${service.category}/${service.slug}`;
+const related = getRelatedServices(service.category, service.slug, 3);
+const booking = siteConfig.bookingUrl || "#";
+const bookingIsExternal = booking.startsWith("http");
+const wts = `/where-to-start#${whereToStartAnchorForCategory(service.category)}`;
+const categoryHubHref = `/services/${service.category}/`;
+
+const defaultAtAGlance = [
+  "Consultation required for personalized planning",
+  "Elemental Skin & Body - Elkhorn, WI",
+  "Aftercare guidance provided at your visit",
+];
+const atAGlance = service.atAGlance ?? defaultAtAGlance;
+const whatIsItParagraphs = Array.isArray(service.whatIsIt)
+  ? service.whatIsIt
+  : [service.whatIsIt];
+
+/** Hero / OG art: same editorial PNGs as category hub bento tiles (`public/images/service-bento/`). */
+const heroTileSrc = service.heroImage ? hubTileImageSrc(service) : null;
+
+const bodySlotSrc = service.bodyImage ? resolveBodySlotSrc(service.slug) : null;
+const resultSlotSrc = resolveResultSlotSrc(service.slug);
+const bodySlotAlt = `${service.name}: treatment imagery at ${siteConfig.name}`;
+const resultSlotAlt = `Clinical environment: ${service.name} at ${siteConfig.name}, ${siteConfig.address.city}, ${siteConfig.address.state}`;
+
+const breadcrumbLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: `${siteConfig.url}/`,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: categoryLabels[service.category],
+      item: `${siteConfig.url}${categoryHubHref}`,
+    },
+    {
+      "@type": "ListItem",
+      position: 3,
+      name: service.name,
+      item: `${siteConfig.url}${canonicalPath}`,
+    },
+  ],
+};
+
+const procedureLd = {
+  "@context": "https://schema.org",
+  "@type": "MedicalProcedure",
+  name: service.name,
+  description: service.metaDescription,
+  url: `${siteConfig.url}${canonicalPath}`,
+  howPerformed: service.howItWorks.join(" "),
+  procedureType: "https://schema.org/NoninvasiveProcedure",
+  status: "https://schema.org/ActiveActionStatus",
+  recognizingAuthority: {
+    "@type": "MedicalOrganization",
+    name: siteConfig.legalName,
+    url: siteConfig.url,
+  },
+  study: {
+    "@type": "MedicalStudy",
+    studyLocation: {
+      "@type": "AdministrativeArea",
+      name: "Elkhorn, WI",
+    },
+  },
+};
+
+// FAQPage schema: eligible for Google FAQ rich results on every service page
+const faqPageLd =
+  service.faq && service.faq.length > 0
+    ? {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: service.faq.map((item) => ({
+          "@type": "Question",
+          name: item.q,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.a,
+          },
+        })),
+      }
+    : null;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogImage={heroTileSrc ?? undefined}
+  jsonLd={[breadcrumbLd, procedureLd, ...(faqPageLd ? [faqPageLd] : [])]}
+>
+  <!-- Hero: full-bleed treatment art + scrim; copy lives on a glass panel (no side frame) -->
+  <section
+    class:list={["service-hero", heroTileSrc ? "service-hero--has-media" : "service-hero--gradient-only"]}
+    aria-labelledby="service-hero-heading"
+  >
+    {
+      heroTileSrc && (
+        <div class="service-hero__media" aria-hidden="true">
+          <img
+            class="service-hero__media-img"
+            src={heroTileSrc}
+            alt=""
+            width={800}
+            height={600}
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+          />
+        </div>
+      )
+    }
+    <div class="service-hero__scrim" aria-hidden="true"></div>
+    <div class="service-hero__glow" aria-hidden="true"></div>
+    <div class="container service-hero__container">
+      <div class="service-hero__inner">
+        <div class="service-hero__copy-panel">
+          <nav class="breadcrumbs" aria-label="Breadcrumb">
+            <a href="/">Home</a>
+            <span aria-hidden="true"> / </span>
+            <a href={categoryHubHref}>{categoryLabels[service.category]}</a>
+            <span aria-hidden="true"> / </span>
+            <span>{service.name}</span>
+          </nav>
+          <p class="service-hero__kicker">
+            Treatment guide · {siteConfig.address.city}, {siteConfig.address.state}
+          </p>
+          <h1 id="service-hero-heading">{service.name}</h1>
+          <p class="lead service-hero__lead">{service.heroDescription}</p>
+          <ul class="service-hero__chips" aria-label="At a glance">
+            {atAGlance.map((item) => <li>{item}</li>)}
+          </ul>
+          <a
+            class="btn btn--hero-primary service-hero__cta"
+            href={booking}
+            target={bookingIsExternal ? "_blank" : undefined}
+            rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+          >
+            {siteConfig.bookingLabel}
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream section--textured">
+    <div class="container service-layout">
+      <div class="service-main prose service-prose">
+        <h2 class="section-heading">What Is It?</h2>
+        {whatIsItParagraphs.map((p) => <p>{p}</p>)}
+
+        <!-- VIDEO SLOT - swap placeholder for a YouTube/Vimeo iframe when ready -->
+        <div class="video-slot" aria-label="Video slot - embed a treatment walkthrough or provider introduction video here">
+          <div class="video-ph" role="img" aria-hidden="true">
+            <div class="video-ph__play">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M8 5.14v14l11-7-11-7z"/>
+              </svg>
+            </div>
+            <p class="video-ph__label">VIDEO SLOT</p>
+            <p class="video-ph__caption">
+              Embed a treatment walkthrough, provider introduction, or patient education
+              video here - YouTube or Vimeo URL.
+            </p>
+          </div>
+        </div>
+
+        {
+          service.goodFitIf && service.goodFitIf.length > 0 && (
+            <div class="good-fit-block">
+              <h2 class="section-heading">You May Love This If&hellip;</h2>
+              <ul class="good-fit-list">
+                {service.goodFitIf.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+
+        {
+          service.bodyImage && (
+            <div class="body-image-slot">
+              {
+                bodySlotSrc ? (
+                  <img
+                    class="service-slot-img service-slot-img--body"
+                    src={bodySlotSrc}
+                    alt={bodySlotAlt}
+                    width={1200}
+                    height={300}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                ) : (
+                  <PhotoPlaceholder
+                    variant="banner"
+                    caption={service.bodyImage.caption}
+                    label={service.bodyImage.label ?? "Treatment photo"}
+                  />
+                )
+              }
+            </div>
+          )
+        }
+
+        <h2 class="section-heading">How It Works</h2>
+        <ol class="step-list">
+          {service.howItWorks.map((step) => <li>{step}</li>)}
+        </ol>
+
+        <h2 class="section-heading">Benefits</h2>
+        <ul>
+          {service.benefits.map((b) => <li>{b}</li>)}
+        </ul>
+
+        <!-- TESTIMONIAL SLOT - replace with a real patient quote or verified review when available -->
+        <figure class="testimonial-slot" aria-label="Patient testimonial slot - add a verified quote here">
+          <svg class="testimonial-slot__mark" aria-hidden="true" width="41" height="41" viewBox="0 0 41 41" fill="none">
+            <text x="0" y="38" font-size="54" font-family="Georgia, serif" fill="var(--color-teal-light)">"</text>
+          </svg>
+          <blockquote class="testimonial-slot__quote">
+            <p>
+              Add a genuine patient quote here - 1 to 2 sentences from a Google review, post-treatment
+              survey, or verified patient feedback. Keep the voice natural and specific to this treatment.
+            </p>
+          </blockquote>
+          <figcaption class="testimonial-slot__attribution">
+            - Patient name &nbsp;·&nbsp; Verified Patient, Elkhorn WI
+          </figcaption>
+        </figure>
+
+        <!-- Mid-page CTA - catches readers at peak interest before they scroll on -->
+        <div class="midpage-cta">
+          <p class="midpage-cta__text">
+            Ready to find out if this is the right treatment for you?
+          </p>
+          <a
+            class="btn"
+            href={booking}
+            target={bookingIsExternal ? "_blank" : undefined}
+            rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+          >
+            {siteConfig.bookingLabel}
+          </a>
+        </div>
+
+        {
+          service.visitAndResults && (
+            <div class="visit-timeline">
+              <h2 class="section-heading">Visit &amp; Results Timeline</h2>
+              <p>{service.visitAndResults}</p>
+            </div>
+          )
+        }
+
+        <h2 class="section-heading">Is This the Right Fit for You?</h2>
+        <p>{service.candidate}</p>
+
+        <h2 class="section-heading">What to Expect</h2>
+        <h3>Before</h3>
+        <p>{service.expectBefore}</p>
+        <h3>During</h3>
+        <p>{service.expectDuring}</p>
+        <h3>After</h3>
+        <p>{service.expectAfter}</p>
+
+        <!-- RESULT IMAGE SLOT - shared asset: public/images/service-slots/result-environment.* -->
+        <div class="result-image-slot">
+          {
+            resultSlotSrc ? (
+              <img
+                class="service-slot-img service-slot-img--result"
+                src={resultSlotSrc}
+                alt={resultSlotAlt}
+                width={1200}
+                height={300}
+                loading="lazy"
+                decoding="async"
+              />
+            ) : (
+              <div aria-hidden="true">
+                <PhotoPlaceholder
+                  variant="banner"
+                  label="Result / environment photo"
+                  caption="Closing visual - treatment room environment, provider at work, or a results-context image. Warm, clinical, aspirational. Avoid identifiable patient features unless you have written consent."
+                />
+              </div>
+            )
+          }
+        </div>
+      </div>
+
+      <aside class="service-aside" aria-label="FAQ and related treatments">
+        <div class="aside-card">
+          <h2 class="aside-title">FAQ</h2>
+          {
+            service.faq.map((item) => (
+              <div class="faq-item">
+                <h3>{item.q}</h3>
+                <p>{item.a}</p>
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="aside-card">
+          <h2 class="aside-title">Related Services</h2>
+          <ul class="aside-list">
+            {
+              related.map((r) => (
+                <li>
+                  <a href={r.href}>{r.label}</a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+
+        <div class="aside-card aside-card--accent">
+          <h2 class="aside-title">Still deciding?</h2>
+          <p class="aside-blurb">
+            Match your goals to options on our Where to Start page-same full menu you see in
+            navigation.
+          </p>
+          <a class="btn btn--outline-dark" href={wts}>Open Where to Start</a>
+        </div>
+
+        <p class="fine-print">
+          Results may vary. Consult with our team to determine if this treatment is right for you.
+        </p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--teal">
+    <div class="container cta-block">
+      <h2>Ready to get started?</h2>
+      <p>Book your visit or call our Elkhorn office to plan your next step.</p>
+      <div class="cta-actions">
+        <a
+          class="btn btn--ghost"
+          href={booking}
+          target={bookingIsExternal ? "_blank" : undefined}
+          rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+        >
+          {siteConfig.bookingLabel}
+        </a>
+        {
+          siteConfig.phone && (
+            <a class="btn btn--ghost" href={`tel:${siteConfig.phone}`}>
+              Call {siteConfig.phoneDisplay || siteConfig.phone}
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* ─── Hero: overlaps sticky pill; optional full-bleed photo + scrim (homepage-style) ─── */
+  .service-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    min-height: min(62vh, 640px);
+    display: flex;
+    align-items: center;
+    margin-top: -6.35rem;
+    padding-top: calc(6.35rem + clamp(4rem, 10vw, 5.5rem));
+    padding-bottom: clamp(4rem, 10vw, 5.5rem);
+  }
+
+  .service-hero--gradient-only {
+    background: linear-gradient(
+      125deg,
+      color-mix(in srgb, var(--color-teal-muted) 42%, var(--color-charcoal)) 0%,
+      color-mix(in srgb, var(--color-teal) 55%, #0d1a1c) 45%,
+      color-mix(in srgb, var(--color-charcoal) 88%, var(--color-teal)) 100%
+    );
+  }
+
+  .service-hero--has-media {
+    min-height: min(72vh, 720px);
+    background: var(--color-charcoal);
+  }
+
+  .service-hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .service-hero__media-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  .service-hero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .service-hero--has-media .service-hero__scrim {
+    background: linear-gradient(
+      110deg,
+      color-mix(in srgb, var(--color-charcoal) 94%, transparent) 0%,
+      color-mix(in srgb, var(--color-charcoal) 72%, transparent) 32%,
+      color-mix(in srgb, var(--color-charcoal) 35%, transparent) 58%,
+      rgb(18 18 18 / 0.2) 100%
+    );
+  }
+
+  .service-hero--gradient-only .service-hero__scrim {
+    background: radial-gradient(
+      ellipse 85% 65% at 15% 28%,
+      rgb(255 255 255 / 0.09),
+      transparent 55%
+    );
+  }
+
+  .service-hero__glow {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background: radial-gradient(ellipse 70% 55% at 12% 40%, rgb(255 255 255 / 0.06), transparent 50%);
+  }
+
+  .service-hero__container {
+    position: relative;
+    z-index: 3;
+  }
+
+  .service-hero__inner {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    max-width: min(44rem, 100%);
+    /* Narrow viewports: rely on `.container` padding only so copy is not over-inset */
+    margin-inline: 0;
+  }
+
+  @media (min-width: 640px) {
+    .service-hero__inner {
+      margin-inline: clamp(0.5rem, 3vw, 2.25rem);
+    }
+  }
+
+  .service-hero__copy-panel {
+    padding: clamp(1.35rem, 4vw, 2.25rem);
+    border-radius: var(--radius-card);
+    border: 1px solid rgb(255 255 255 / 0.14);
+    background: color-mix(in srgb, var(--color-charcoal) 78%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow:
+      0 4px 24px rgb(0 0 0 / 0.2),
+      0 24px 56px rgb(0 0 0 / 0.28);
+  }
+
+  .service-hero--gradient-only .service-hero__copy-panel {
+    background: color-mix(in srgb, var(--color-charcoal) 55%, transparent);
+    box-shadow: 0 12px 40px rgb(0 0 0 / 0.22);
+  }
+
+  @supports not (backdrop-filter: blur(1px)) {
+    .service-hero__copy-panel {
+      background: color-mix(in srgb, var(--color-charcoal) 88%, transparent);
+    }
+  }
+
+  /* ─── Hero typography ─── */
+  .service-hero__kicker {
+    margin: 0 0 0.65rem;
+    font-family: var(--font-body);
+    font-size: clamp(0.68rem, 1.2vw, 0.76rem);
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    line-height: 1.45;
+    color: color-mix(in srgb, var(--color-teal-light) 90%, white);
+    text-shadow: 0 1px 14px rgb(0 0 0 / 0.35);
+  }
+
+  .service-hero__kicker::after {
+    content: "";
+    display: block;
+    width: 2.5rem;
+    height: 2px;
+    margin-top: 0.65rem;
+    border-radius: 1px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-teal) 88%, transparent),
+      transparent
+    );
+  }
+
+  .service-hero h1 {
+    margin: 0 0 var(--space-sm);
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    line-height: 1.08;
+    color: var(--color-white);
+    font-size: clamp(2.1rem, 5.5vw, 3.35rem);
+    text-shadow:
+      0 2px 28px rgb(0 0 0 / 0.45),
+      0 1px 3px rgb(0 0 0 / 0.35);
+  }
+
+  .service-hero .breadcrumbs {
+    font-size: 0.8rem;
+    margin: 0 0 var(--space-sm);
+    opacity: 0.92;
+    color: rgb(255 255 255 / 0.82);
+  }
+
+  .service-hero .breadcrumbs a {
+    color: rgb(255 255 255 / 0.95);
+    text-decoration: underline;
+    text-decoration-color: rgb(255 255 255 / 0.25);
+    text-underline-offset: 0.15em;
+  }
+
+  .service-hero .breadcrumbs a:hover {
+    text-decoration-color: color-mix(in srgb, var(--color-teal-light) 70%, white);
+  }
+
+  .service-hero__lead {
+    max-width: none;
+    font-size: clamp(1.02rem, 2.1vw, 1.2rem);
+    font-weight: 500;
+    color: rgb(255 255 255 / 0.93);
+    line-height: 1.65;
+    margin: 0 0 var(--space-md);
+    text-shadow: 0 1px 16px rgb(0 0 0 / 0.35);
+  }
+
+  .service-hero__chips {
+    list-style: none;
+    margin: 0 0 var(--space-md);
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .service-hero__chips li {
+    margin: 0;
+    padding: 0.42rem 0.85rem;
+    font-family: var(--font-body);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.35;
+    color: rgb(255 255 255 / 0.95);
+    border-radius: 999px;
+    border: 1px solid rgb(255 255 255 / 0.22);
+    background: rgb(255 255 255 / 0.1);
+    box-shadow: 0 1px 0 rgb(255 255 255 / 0.06) inset;
+  }
+
+  .service-hero__cta {
+    margin-top: 0.15rem;
+  }
+
+  /* ─── Hero CTA ─── */
+  .btn--hero-primary {
+    background: var(--color-teal);
+    color: var(--color-white);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  }
+
+  .btn--hero-primary:hover {
+    background: color-mix(in srgb, var(--color-teal) 88%, black);
+  }
+
+  /* ─── Body layout ─── */
+  .service-layout {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  @media (min-width: 1024px) {
+    .service-layout {
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    }
+
+    .service-aside {
+      position: sticky;
+      top: 5.5rem;
+    }
+  }
+
+  .service-prose {
+    max-width: 48rem;
+  }
+
+  .service-prose h2.section-heading {
+    margin-top: var(--space-lg);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-family: var(--font-heading);
+    position: relative;
+    padding-bottom: var(--space-xs);
+  }
+
+  .service-prose h2.section-heading::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 3rem;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-teal), var(--color-teal-light));
+    border-radius: 1px;
+  }
+
+  .service-prose h2.section-heading:first-child {
+    margin-top: 0;
+  }
+
+  .service-prose h3 {
+    font-family: var(--font-body);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    color: var(--color-teal-muted);
+    margin-top: var(--space-md);
+  }
+
+  /* ─── Good Fit block ─── */
+  .good-fit-block {
+    background: color-mix(in srgb, var(--color-teal) 7%, var(--color-white));
+    border-left: 3px solid var(--color-teal);
+    border-radius: 0 6px 6px 0;
+    padding: var(--space-md) var(--space-md) var(--space-md) var(--space-lg);
+    margin: var(--space-lg) 0;
+  }
+
+  .good-fit-block h2.section-heading {
+    margin-top: 0 !important;
+  }
+
+  .good-fit-block h2.section-heading::after {
+    display: none;
+  }
+
+  .good-fit-list {
+    list-style: none;
+    margin: var(--space-sm) 0 0;
+    padding: 0;
+  }
+
+  .good-fit-list li {
+    position: relative;
+    padding: 0.35rem 0 0.35rem 1.65rem;
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .good-fit-list li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    top: 0.38rem;
+    color: var(--color-teal);
+    font-weight: 700;
+    font-size: 0.9rem;
+  }
+
+  /* ─── Body image slot ─── */
+  .body-image-slot {
+    margin: var(--space-lg) 0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .service-slot-img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 4 / 1;
+    min-height: 10rem;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 8px;
+  }
+
+  .service-slot-img--result {
+    margin-top: 0;
+  }
+
+  /* ─── Visit timeline ─── */
+  .visit-timeline {
+    border-radius: 6px;
+    border: 1px solid var(--color-teal-light);
+    background: var(--color-white);
+    padding: var(--space-md);
+    margin: var(--space-lg) 0;
+  }
+
+  .visit-timeline h2.section-heading {
+    margin-top: 0 !important;
+  }
+
+  .visit-timeline p {
+    margin: var(--space-xs) 0 0;
+    font-size: 0.95rem;
+  }
+
+  /* ─── Step list ─── */
+  .step-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: esb-step;
+  }
+
+  .step-list li {
+    position: relative;
+    padding-left: 2.75rem;
+    margin-bottom: var(--space-sm);
+    min-height: 2.25rem;
+  }
+
+  .step-list li::before {
+    counter-increment: esb-step;
+    content: counter(esb-step);
+    position: absolute;
+    left: 0;
+    top: 0.1rem;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 999px;
+    background: var(--color-teal);
+    color: var(--color-white);
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.85rem;
+    display: grid;
+    place-items: center;
+  }
+
+  /* ─── Aside ─── */
+  .aside-card {
+    padding: var(--space-md);
+    border-radius: 8px;
+    border: 1px solid var(--color-teal-light);
+    background: var(--color-white);
+    margin-bottom: var(--space-md);
+    box-shadow: 0 8px 26px rgb(0 0 0 / 0.04);
+  }
+
+  .aside-card--accent {
+    border-color: color-mix(in srgb, var(--color-teal) 35%, var(--color-teal-light));
+    background: color-mix(in srgb, var(--color-cream) 55%, var(--color-white));
+  }
+
+  .aside-title {
+    margin: 0 0 var(--space-sm);
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 1rem;
+    color: var(--color-teal-muted);
+  }
+
+  .aside-list {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+
+  .aside-blurb {
+    margin: 0 0 var(--space-sm);
+    font-size: 0.95rem;
+  }
+
+  .faq-item {
+    margin-bottom: var(--space-md);
+  }
+
+  .faq-item h3 {
+    font-family: var(--font-body);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: none;
+    font-size: 1rem;
+    margin: 0 0 0.35rem;
+    color: var(--color-teal-muted);
+  }
+
+  .faq-item p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .fine-print {
+    font-size: 0.9rem;
+    color: var(--color-teal-muted);
+    margin: 0;
+  }
+
+  /* ─── Aside CTAs ─── */
+  .btn--outline-dark {
+    background: transparent;
+    color: var(--color-teal);
+    border: 2px solid var(--color-teal);
+    text-decoration: none;
+    display: inline-flex;
+    padding: 0.65rem 1.1rem;
+    font-weight: 600;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border-radius: var(--radius-cta);
+  }
+
+  .btn--outline-dark:hover {
+    background: rgb(42 122 140 / 0.08);
+  }
+
+  /* ─── Mid-page CTA ─── */
+  .midpage-cta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    background: color-mix(in srgb, var(--color-teal) 9%, var(--color-white));
+    border: 1px solid var(--color-teal-light);
+    border-radius: 8px;
+    padding: var(--space-md) var(--space-lg);
+    margin: var(--space-lg) 0;
+  }
+
+  @media (max-width: 520px) {
+    .midpage-cta {
+      flex-direction: column;
+      align-items: stretch;
+      text-align: center;
+      padding: var(--space-md);
+      gap: var(--space-sm);
+    }
+
+    .midpage-cta .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .midpage-cta__text {
+    margin: 0;
+    flex: 1 1 14rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-teal-muted);
+    font-family: var(--font-body);
+  }
+
+  /* ─── Bottom CTA section ─── */
+  .cta-block {
+    text-align: center;
+  }
+
+  .cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    justify-content: center;
+    margin-top: var(--space-md);
+  }
+
+  @media (max-width: 520px) {
+    .cta-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .cta-actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .btn--ghost {
+    background: transparent;
+    border: 1px solid var(--color-white);
+  }
+
+  .btn--ghost:hover {
+    background: rgb(255 255 255 / 0.12);
+  }
+
+  /* ─── Video slot ─── */
+  .video-slot {
+    margin: var(--space-lg) 0;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .video-ph {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+    background: color-mix(in srgb, var(--color-charcoal) 88%, var(--color-teal));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    outline: 2px dashed rgb(255 255 255 / 0.2);
+    outline-offset: -14px;
+    border-radius: 10px;
+  }
+
+  .video-ph__play {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 999px;
+    background: var(--color-teal);
+    display: grid;
+    place-items: center;
+    color: var(--color-white);
+    box-shadow: 0 0 0 8px rgb(42 122 140 / 0.25);
+    margin-bottom: 0.25rem;
+  }
+
+  .video-ph__label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-teal-light);
+    margin: 0;
+    font-family: var(--font-body);
+  }
+
+  .video-ph__caption {
+    font-size: 0.82rem;
+    max-width: 30rem;
+    text-align: center;
+    color: rgb(255 255 255 / 0.65);
+    margin: 0;
+    padding: 0 var(--space-md);
+    font-family: var(--font-body);
+  }
+
+  /* ─── Testimonial slot ─── */
+  .testimonial-slot {
+    margin: var(--space-lg) 0;
+    padding: var(--space-md) var(--space-lg);
+    background: color-mix(in srgb, var(--color-teal) 6%, var(--color-white));
+    border: 1px dashed var(--color-teal);
+    border-radius: 10px;
+    display: grid;
+    gap: var(--space-xs);
+  }
+
+  .testimonial-slot__mark {
+    display: block;
+    margin-bottom: -0.5rem;
+  }
+
+  .testimonial-slot__quote {
+    margin: 0;
+  }
+
+  .testimonial-slot__quote p {
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--color-charcoal);
+    margin: 0;
+  }
+
+  .testimonial-slot__attribution {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--color-teal);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: var(--font-body);
+    margin-top: 0.25rem;
+  }
+
+  /* ─── Result image slot ─── */
+  .result-image-slot {
+    margin-top: var(--space-lg);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+</style>

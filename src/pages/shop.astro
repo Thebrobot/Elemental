@@ -1,0 +1,26 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { siteConfig } from "../config/siteConfig";
+
+const title = `Shop | ${siteConfig.name} - Elkhorn, WI`;
+const description = `Shop medical-grade skincare and wellness products curated by ${siteConfig.name} in Elkhorn, WI.`;
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="section section--cream page-hero" aria-labelledby="shop-heading">
+    <div class="container">
+      <p class="kicker">Shop</p>
+      <h1 id="shop-heading">Wellness Products</h1>
+      <p class="lede">
+        Our curated selection of supplements, skincare, and wellness products to support your health journey.
+        Check back soon for our full product lineup.
+      </p>
+      <a class="btn" href="/contact">Contact us to order</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero h1 { font-size: clamp(1.75rem, 4vw, 2.75rem); }
+  .lede { font-size: 1.05rem; max-width: 38rem; line-height: 1.7; margin-bottom: var(--space-lg); }
+</style>

@@ -1,0 +1,264 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection, render } from "astro:content";
+import { siteConfig } from "../../config/siteConfig";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const title = `${post.data.title} | ${siteConfig.name} - Elkhorn, WI`;
+const description = post.data.description;
+const heroImage = post.data.heroImage;
+const canonicalPostPath = `/blog/${post.id}`;
+
+const heroAbs = heroImage.startsWith("http")
+  ? heroImage
+  : `${siteConfig.url}${heroImage.startsWith("/") ? heroImage : `/${heroImage}`}`;
+
+const blogPostingLd = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  headline: post.data.title,
+  description: post.data.description,
+  datePublished: post.data.pubDate.toISOString(),
+  image: heroAbs,
+  author: {
+    "@type": "MedicalOrganization",
+    name: siteConfig.legalName,
+    url: siteConfig.url,
+  },
+  publisher: {
+    "@type": "Organization",
+    name: siteConfig.legalName,
+    url: siteConfig.url,
+  },
+  mainEntityOfPage: {
+    "@type": "WebPage",
+    "@id": `${siteConfig.url}${canonicalPostPath}`,
+  },
+};
+
+const dateLabel = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+}).format(post.data.pubDate);
+
+const booking = siteConfig.bookingUrl || "#";
+const bookingIsExternal = booking.startsWith("http");
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  ogImage={heroImage}
+  ogType="article"
+  jsonLd={blogPostingLd}
+>
+  <article class="blog-post">
+    <header class="blog-post__header section section--cream">
+      <div class="container blog-post__header-inner">
+        <nav class="breadcrumbs" aria-label="Breadcrumb">
+          <a href="/">Home</a>
+          <span aria-hidden="true"> / </span>
+          <a href="/blog">Blog</a>
+          <span aria-hidden="true"> / </span>
+          <span class="breadcrumbs__current">{post.data.title}</span>
+        </nav>
+        <p class="blog-post__kicker">Education</p>
+        <h1 class="blog-post__title">{post.data.title}</h1>
+        <time class="blog-post__date" datetime={post.data.pubDate.toISOString()}>{dateLabel}</time>
+        <div class="blog-post__hero-wrap">
+          <img
+            class="blog-post__hero-img"
+            src={heroImage}
+            alt=""
+            width="1200"
+            height="675"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+      </div>
+    </header>
+    <div class="section section--white">
+      <div class="container blog-post__content">
+        <Content />
+        <p class="blog-post__footer-cta">
+          <a
+            class="btn"
+            href={booking}
+            target={bookingIsExternal ? "_blank" : undefined}
+            rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+          >
+            {siteConfig.bookingLabel}
+          </a>
+          <a class="btn btn--outline" href="/contact">Contact us</a>
+        </p>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .blog-post__header-inner {
+    max-width: 46rem;
+  }
+
+  .breadcrumbs {
+    font-size: 0.85rem;
+    margin-bottom: var(--space-sm);
+    color: color-mix(in srgb, var(--color-charcoal) 65%, white);
+  }
+
+  .breadcrumbs a {
+    color: var(--color-teal-muted);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .breadcrumbs a:hover {
+    color: var(--color-teal);
+  }
+
+  .breadcrumbs__current {
+    font-weight: 500;
+  }
+
+  .blog-post__kicker {
+    margin: 0 0 0.35rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+
+  .blog-post__title {
+    margin: 0 0 var(--space-sm);
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
+    line-height: 1.15;
+    color: var(--color-charcoal);
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  .blog-post__date {
+    display: block;
+    margin-bottom: var(--space-md);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-teal-muted);
+  }
+
+  .blog-post__hero-wrap {
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    border: 1px solid var(--color-border-subtle);
+    box-shadow: var(--shadow-card);
+  }
+
+  .blog-post__hero-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    vertical-align: middle;
+  }
+
+  .section--white {
+    background: var(--color-white);
+  }
+
+  .blog-post__content {
+    max-width: 40rem;
+    font-size: 1.02rem;
+    line-height: 1.75;
+    color: var(--color-charcoal);
+  }
+
+  .blog-post__content :global(h2) {
+    margin: var(--space-lg) 0 var(--space-sm);
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    text-transform: none;
+    letter-spacing: 0.03em;
+    color: var(--color-teal-muted);
+  }
+
+  .blog-post__content :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .blog-post__content :global(h3) {
+    margin: var(--space-md) 0 var(--space-xs);
+    font-size: 1.1rem;
+    text-transform: none;
+    color: var(--color-charcoal);
+  }
+
+  .blog-post__content :global(p) {
+    margin: 0 0 var(--space-sm);
+  }
+
+  .blog-post__content :global(a) {
+    color: var(--color-teal-muted);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-teal) 40%, transparent);
+    text-underline-offset: 0.15em;
+  }
+
+  .blog-post__content :global(a:hover) {
+    color: var(--color-teal);
+  }
+
+  .blog-post__content :global(ul) {
+    margin: 0 0 var(--space-sm);
+    padding-left: 1.25rem;
+  }
+
+  .blog-post__content :global(li) {
+    margin-bottom: 0.35rem;
+  }
+
+  .blog-post__content :global(strong) {
+    font-weight: 700;
+    color: var(--color-charcoal);
+  }
+
+  .blog-post__footer-cta {
+    margin-top: var(--space-xl);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .btn--outline {
+    background: transparent;
+    color: var(--color-teal);
+    border: 2px solid var(--color-teal);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: var(--radius-cta);
+  }
+
+  .btn--outline:hover {
+    background: rgb(42 122 140 / 0.08);
+    color: var(--color-teal-muted);
+  }
+</style>

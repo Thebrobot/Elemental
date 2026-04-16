@@ -1,0 +1,242 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { getCollection } from "astro:content";
+import { siteConfig } from "../../config/siteConfig";
+
+const title = `Blog | ${siteConfig.name} - Elkhorn, WI`;
+const description = `Articles on medical aesthetics, skin health, body treatments, and wellness from ${siteConfig.name} in Elkhorn, WI.`;
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const postDateFmt = new Intl.DateTimeFormat("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+---
+
+<BaseLayout title={title} description={description}>
+  <section class="section section--cream page-hero" aria-labelledby="blog-heading">
+    <div class="container">
+      <p class="kicker">Blog</p>
+      <h1 id="blog-heading">Education from our clinical team</h1>
+      <p class="lede">
+        Treatment explainers and wellness insights from our Elkhorn office, written to help you ask better questions at consultation.
+      </p>
+      <div class="hero-actions">
+        <a class="btn" href="/contact">Contact the Elkhorn office</a>
+        <a class="btn btn--outline" href="/where-to-start">Where to start</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white" aria-labelledby="articles-heading">
+    <div class="container">
+      <h2 id="articles-heading" class="list-heading">Articles</h2>
+      <ul class="blog-index-list">
+        {
+          posts.map((post) => (
+            <li class="blog-index-item">
+              <a class="blog-index-item__img-link" href={`/blog/${post.id}/`} tabindex="-1" aria-hidden="true">
+                <img
+                  class="blog-index-item__img"
+                  src={post.data.heroImage}
+                  alt=""
+                  width="640"
+                  height="400"
+                  loading="lazy"
+                />
+              </a>
+              <div class="blog-index-item__body">
+                <time class="blog-index-item__date" datetime={post.data.pubDate.toISOString()}>
+                  {postDateFmt.format(post.data.pubDate)}
+                </time>
+                <h3 class="blog-index-item__title">
+                  <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+                </h3>
+                <p class="blog-index-item__excerpt">{post.data.description}</p>
+                <a class="blog-index-item__read" href={`/blog/${post.id}/`}>
+                  Read article
+                  <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                </a>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .page-hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    max-width: 42rem;
+    text-transform: none;
+    letter-spacing: 0.02em;
+    color: var(--color-charcoal);
+  }
+
+  .lede {
+    font-size: 1.05rem;
+    max-width: 38rem;
+    line-height: 1.7;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .btn--outline {
+    background: transparent;
+    color: var(--color-teal);
+    border: 2px solid var(--color-teal);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.85rem 1.5rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-radius: var(--radius-cta);
+  }
+
+  .btn--outline:hover {
+    background: rgb(42 122 140 / 0.08);
+    color: var(--color-teal-muted);
+  }
+
+  .section--white {
+    background: var(--color-white);
+  }
+
+  .list-heading {
+    position: relative;
+    padding-bottom: var(--space-xs);
+    margin: 0 0 var(--space-lg);
+    font-size: clamp(1.35rem, 3vw, 1.75rem);
+    text-transform: none;
+    letter-spacing: 0.04em;
+    color: var(--color-charcoal);
+  }
+
+  .list-heading::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 3rem;
+    height: 2px;
+    background: var(--color-teal);
+    border-radius: 1px;
+  }
+
+  .blog-index-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 768px) {
+    .blog-index-item {
+      display: grid;
+      grid-template-columns: minmax(0, 280px) 1fr;
+      gap: var(--space-md);
+      align-items: start;
+    }
+  }
+
+  .blog-index-item {
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--color-border-subtle);
+  }
+
+  .blog-index-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .blog-index-item__img-link {
+    display: block;
+    border-radius: var(--radius-card);
+    overflow: hidden;
+    border: 1px solid var(--color-border-subtle);
+    box-shadow: var(--shadow-card);
+    aspect-ratio: 16 / 10;
+    background: var(--color-paper-cool);
+  }
+
+  .blog-index-item__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .blog-index-item__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .blog-index-item__date {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-teal-muted);
+  }
+
+  .blog-index-item__title {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    line-height: 1.3;
+    text-transform: none;
+    letter-spacing: 0.02em;
+  }
+
+  .blog-index-item__title a {
+    color: var(--color-charcoal);
+    text-decoration: none;
+  }
+
+  .blog-index-item__title a:hover {
+    color: var(--color-teal-muted);
+  }
+
+  .blog-index-item__excerpt {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--color-charcoal) 72%, white);
+  }
+
+  .blog-index-item__read {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: var(--space-xs);
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-teal);
+  }
+
+  .blog-index-item__read:hover {
+    color: var(--color-teal-muted);
+  }
+</style>

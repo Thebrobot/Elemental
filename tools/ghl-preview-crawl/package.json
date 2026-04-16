@@ -1,0 +1,13 @@
+{
+  "name": "ghl-preview-crawl",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "crawl": "node ghl-preview-crawl.mjs",
+    "postinstall": "playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.49.0"
+  }
+}

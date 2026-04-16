@@ -1,0 +1,46 @@
+---
+/**
+ * Category marks: inline stroke SVGs (`currentColor`), shared with the treatment explorer.
+ * Swap paths in `src/icons/categoryMarks.ts` when you export finals from your icon set.
+ */
+import type { ServiceCategory } from "../data/serviceRegistry";
+import { categoryMarkSvg, type CategoryMarkId } from "../icons/categoryMarks";
+
+export type CategoryIconVariant = ServiceCategory | "products";
+
+interface Props {
+  variant: CategoryIconVariant;
+  class?: string;
+  /** Kept for API compatibility; SVGs decode instantly. */
+  loading?: "eager" | "lazy";
+}
+
+const { variant, class: className } = Astro.props;
+const id = variant as CategoryMarkId;
+const html = categoryMarkSvg[id] ?? categoryMarkSvg.injectables;
+---
+
+<span class:list={["category-mark", className]} set:html={html} />
+
+<style>
+  /**
+   * Intrinsic box so icons never collapse when parent scoped CSS
+   * cannot target this component’s root (different data-astro-*).
+   */
+  .category-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    line-height: 0;
+    vertical-align: middle;
+  }
+
+  .category-mark :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>

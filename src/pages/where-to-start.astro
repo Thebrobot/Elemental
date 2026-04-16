@@ -1,0 +1,1091 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { siteConfig } from "../config/siteConfig";
+import { getTreatmentExplorerCategories } from "../data/treatmentExplorerCategories";
+import {
+  categoryLabels,
+  whereToStartAnchorForCategory,
+  type ServiceCategory,
+} from "../data/serviceRegistry";
+import TreatmentCategoryExplorer from "../islands/TreatmentCategoryExplorer.tsx";
+import CategoryLineIcon from "../components/CategoryLineIcon.astro";
+import { whereToStartJourneyIcons } from "../icons/whereToStartDecor";
+
+/** Patient-facing subtitle under each hub label on the path cards. */
+const pathFeelingByCategory: { title: string; cat: ServiceCategory }[] = [
+  { title: "Softening lines or restoring volume", cat: "injectables" },
+  { title: "Skin that feels uneven or tired", cat: "skin" },
+  { title: "Your body, how you carry it", cat: "body" },
+  { title: "Energy, hormones, or metabolism", cat: "wellness" },
+];
+
+const title = `Where to Start | ${siteConfig.name}, Elkhorn, WI`;
+const description =
+  "First visit? Physician-led medical aesthetics in Elkhorn, WI: skin, laser, body & wellness. Explore at your pace; we’re here when you want to talk or book.";
+
+const booking = siteConfig.bookingUrl || "#";
+const bookingIsExternal = booking.startsWith("http");
+
+const exploreCategories = getTreatmentExplorerCategories();
+
+const breadcrumbLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    {
+      "@type": "ListItem",
+      position: 1,
+      name: "Home",
+      item: `${siteConfig.url}/`,
+    },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Where to start",
+      item: `${siteConfig.url}/where-to-start/`,
+    },
+  ],
+};
+---
+
+<BaseLayout title={title} description={description} jsonLd={breadcrumbLd} ogImage="/images/where-to-start-hero.png">
+  <section class="wts-hero" aria-labelledby="wts-heading">
+    <div class="wts-hero__media" aria-hidden="true">
+      <img
+        class="wts-hero__media-img"
+        src="/images/where-to-start-hero.png"
+        alt=""
+        width="1376"
+        height="768"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </div>
+    <div class="wts-hero__scrim" aria-hidden="true"></div>
+    <div class="wts-hero__wave" aria-hidden="true"></div>
+    <div class="wts-hero__overlay" aria-hidden="true"></div>
+    <div class="wts-hero__grain" aria-hidden="true"></div>
+    <div class="container wts-hero__shell">
+      <div class="wts-hero__intro">
+        <p class="wts-kicker">If you’re new here, we’re glad you found us.</p>
+        <h1 id="wts-heading" class="wts-title">Let’s find a starting point that feels like <em>you</em></h1>
+        <div class="wts-hero__copy">
+          <p>
+            This page is here to help you sort the options. At {siteConfig.name} in Elkhorn, we start by understanding
+            what you’re hoping for, whether you already have a clear goal or you’re still figuring out how to describe it.
+          </p>
+          <p class="wts-hero__copy-muted">
+            We work with people from Walworth County, Lake Geneva, and nearby towns as a small team with physician-led
+            care, so your visits can stay personal and consistent.
+          </p>
+        </div>
+        <div class="wts-hero__cta">
+          <a
+            class="btn wts-hero__btn-primary"
+            href={booking}
+            target={bookingIsExternal ? "_blank" : undefined}
+            rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+          >
+            {siteConfig.bookingLabel}
+          </a>
+        </div>
+      </div>
+
+      <div class="wts-hero__paths" id="pick-start" aria-labelledby="path-heading">
+        <p class="wts-path-kicker">When you’re ready</p>
+        <h2 id="path-heading" class="wts-section-h2">What feels closest today?</h2>
+        <p class="wts-path-intro">
+          Choose a focus area below; details for each category are in the list further down.
+        </p>
+        <ul class="wts-path-grid" role="list">
+          {
+            pathFeelingByCategory.map((row) => {
+              const hub = categoryLabels[row.cat];
+              const anchor = whereToStartAnchorForCategory(row.cat);
+              const ariaLabel = `${hub}: ${row.title}. Jump to this category in the list below.`;
+              return (
+                <li class="wts-path-grid__item">
+                  <a
+                    class="wts-path-card wts-path-card--directory"
+                    href={`#${anchor}`}
+                    aria-label={ariaLabel}
+                  >
+                    <span class="wts-path-card__directory-visual" aria-hidden="true">
+                      <CategoryLineIcon variant={row.cat} loading="eager" />
+                    </span>
+                    <span class="wts-path-card__directory-text">
+                      <span class="wts-path-card__directory-head">{hub}</span>
+                      <span class="wts-path-card__directory-sub">{row.title}</span>
+                      <span class="wts-path-card__go">See options</span>
+                    </span>
+                  </a>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper" aria-labelledby="journey-heading">
+    <div class="container wts-journey-shell">
+      <h2 id="journey-heading" class="wts-section-h2 wts-section-h2--dark">How visits with us usually flow</h2>
+      <p class="wts-journey-intro">
+        However you found this page, these are the usual steps, from what you share with us to reading guides and
+        scheduling when you’re ready.
+      </p>
+      <ol class="wts-journey">
+        <li>
+          <span class="wts-journey__marker" aria-hidden="true">
+            <span class="wts-journey__mark-icon" set:html={whereToStartJourneyIcons[0]} />
+            <span class="wts-journey__mark-num">1</span>
+          </span>
+          <div class="wts-journey__body">
+            <span class="wts-journey__label">Tell us what you’re noticing</span>
+            <p class="wts-journey__text">
+              Share what you’re experiencing in everyday language. We’ll connect it to options that might help and
+              answer what you’re curious about.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="wts-journey__marker" aria-hidden="true">
+            <span class="wts-journey__mark-icon" set:html={whereToStartJourneyIcons[1]} />
+            <span class="wts-journey__mark-num">2</span>
+          </span>
+          <div class="wts-journey__body">
+            <span class="wts-journey__label">Read when it helps</span>
+            <p class="wts-journey__text">
+              Use the category browser below anytime; each treatment links to the same detailed guides we use on our
+              homepage.
+            </p>
+          </div>
+        </li>
+        <li>
+          <span class="wts-journey__marker" aria-hidden="true">
+            <span class="wts-journey__mark-icon" set:html={whereToStartJourneyIcons[2]} />
+            <span class="wts-journey__mark-num">3</span>
+          </span>
+          <div class="wts-journey__body">
+            <span class="wts-journey__label">Decide with support</span>
+            <p class="wts-journey__text">
+              When you’re ready to book or message, we’ll walk through timing, whether a series fits your goal, and
+              what we think matches what you’ve told us, then you choose what’s next.
+            </p>
+          </div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="position-heading">
+    <div class="container wts-different">
+      <h2 id="position-heading" class="wts-section-h2 wts-section-h2--dark">Medical aesthetics, held with care</h2>
+      <p class="wts-different__lede">
+        We’re a physician-led medical aesthetics practice in Elkhorn where face, skin, body, and wellness can stay in
+        one conversation, so your plan doesn’t get split into unrelated pieces.
+      </p>
+      <div class="wts-split" aria-label="What many people expect compared with how we show up">
+        <div class="wts-split__panel">
+          <h3 class="wts-split__h">What many of us picture first</h3>
+          <ul class="wts-split__list">
+            <li>A tight spotlight on one or two trending services</li>
+            <li>Visits that float by without a sense of what comes next</li>
+            <li>Pressure to chase what’s loud online instead of what feels right in your body</li>
+          </ul>
+        </div>
+        <div class="wts-split__panel wts-split__panel--brand">
+          <h3 class="wts-split__h">What we hope you feel here</h3>
+          <ul class="wts-split__list">
+            <li>Face, skin, body, and wellness woven together under one caring team</li>
+            <li>Space for injectables or weight support, and also laser, texture, hormones, recovery, and rest</li>
+            <li>Clear explanations and time to think before you decide on a next step</li>
+          </ul>
+        </div>
+      </div>
+      <div class="wts-standouts">
+        <div class="wts-standouts__item">
+          <span class="wts-standouts__tag">Continuity</span>
+          <p>Skin, body, and wellness conversations stay connected so nothing about you gets lost between rooms.</p>
+        </div>
+        <div class="wts-standouts__item">
+          <span class="wts-standouts__tag">Depth</span>
+          <p>We lean on anatomy, thoughtful device use, and evidence, never on buzzwords alone.</p>
+        </div>
+        <div class="wts-standouts__item">
+          <span class="wts-standouts__tag">Warmth</span>
+          <p>Every question is welcome; we’d rather linger in the details than leave you guessing.</p>
+        </div>
+      </div>
+      <p class="wts-different__about">
+        <a class="btn" href="/about">More about how we care</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--cream section--textured" id="treatment-browser" aria-labelledby="browser-heading">
+    <div class="container">
+      <h2 id="browser-heading" class="wts-section-h2">Browse by category</h2>
+      <div class="wts-browser-strip" aria-hidden="true">
+        {
+          pathFeelingByCategory.map((row) => (
+            <span class="wts-browser-strip__chip">
+              <CategoryLineIcon variant={row.cat} loading="lazy" />
+            </span>
+          ))
+        }
+      </div>
+      <p class="wts-section-lede">
+        Below are Injectables, Skin and laser, Body, and Wellness. Open any treatment for a full guide. If it helps to
+        talk it through first,
+        <a href="#talk-team">contact our team</a>.
+      </p>
+      <TreatmentCategoryExplorer client:load categories={exploreCategories} />
+    </div>
+  </section>
+
+  <section class="section section--teal wts-foot" id="talk-team" aria-labelledby="foot-heading">
+    <div class="container wts-foot__inner">
+      <h2 id="foot-heading" class="wts-foot__title">We’re here to help you decide</h2>
+      <p class="wts-foot__lede">
+        If something isn’t the right match, if a series would serve you better, or if another approach makes more sense,
+        we’ll explain why in plain terms. Ask us anything, big or small. Message or book when you’re ready, and we’ll
+        help with options, timing, and cost questions at the speed that works for you.
+      </p>
+      <div class="wts-foot__actions">
+        <a class="btn btn--ghost-light" href="/contact">Contact us</a>
+        <a
+          class="btn btn--on-teal"
+          href={booking}
+          target={bookingIsExternal ? "_blank" : undefined}
+          rel={bookingIsExternal ? "noopener noreferrer" : undefined}
+        >
+          {siteConfig.bookingLabel}
+        </a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .wts-hero {
+    position: relative;
+    isolation: isolate;
+    margin-top: -6.35rem;
+    padding-top: calc(6.35rem + clamp(2.25rem, 5vw, 3.25rem));
+    padding-bottom: clamp(2.25rem, 5vw, 3.25rem);
+    min-height: min(88vh, 920px);
+    display: flex;
+    flex-direction: column;
+    background: var(--color-charcoal);
+  }
+
+  @media (max-width: 639px) {
+    .wts-hero {
+      min-height: auto;
+    }
+  }
+
+  .wts-hero__media {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .wts-hero__media-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 38%;
+    filter: brightness(0.92) saturate(0.92);
+  }
+
+  @media (max-width: 900px) {
+    .wts-hero__media-img {
+      object-position: center center;
+    }
+  }
+
+  /* Same angle family as homepage hero: heavy charcoal + teal-muted “lit band” (not a flat gray) */
+  .wts-hero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: linear-gradient(
+      105deg,
+      color-mix(in srgb, var(--color-charcoal) 86%, transparent) 0%,
+      color-mix(in srgb, var(--color-charcoal) 74%, transparent) 20%,
+      color-mix(in srgb, var(--color-teal-muted) 40%, var(--color-charcoal) 60%) 48%,
+      color-mix(in srgb, var(--color-charcoal) 64%, transparent) 72%,
+      color-mix(in srgb, var(--color-charcoal) 56%, transparent) 100%
+    );
+  }
+
+  /* Teal wave wash layered on the scrim (Where to Start–specific depth) */
+  .wts-hero__wave {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    background:
+      radial-gradient(
+        ellipse 125% 95% at 5% 108%,
+        color-mix(in srgb, var(--color-teal) 62%, transparent) 0%,
+        color-mix(in srgb, var(--color-teal) 38%, transparent) 38%,
+        color-mix(in srgb, var(--color-teal) 18%, transparent) 62%,
+        color-mix(in srgb, var(--color-teal-muted) 8%, transparent) 82%
+      ),
+      radial-gradient(
+        ellipse 95% 80% at 102% -8%,
+        color-mix(in srgb, var(--color-teal-muted) 58%, transparent) 0%,
+        color-mix(in srgb, var(--color-teal) 32%, transparent) 42%,
+        color-mix(in srgb, var(--color-teal) 14%, transparent) 68%
+      ),
+      linear-gradient(
+        162deg,
+        color-mix(in srgb, var(--color-teal) 52%, transparent) 0%,
+        color-mix(in srgb, var(--color-teal) 28%, transparent) 34%,
+        color-mix(in srgb, var(--color-teal-muted) 22%, transparent) 52%,
+        color-mix(in srgb, var(--color-teal-muted) 48%, transparent) 100%
+      );
+  }
+
+  /* Mirrors homepage .hero__overlay: soft light pool + secondary lift (adds dimension on the fade) */
+  .wts-hero__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 90% 70% at 18% 34%, rgb(255 255 255 / 0.09), transparent 52%),
+      radial-gradient(ellipse 55% 42% at 92% 88%, rgb(255 255 255 / 0.045), transparent 50%);
+  }
+
+  /* Very subtle film grain (same idea as .section--textured) — breaks up flat digital gradients */
+  .wts-hero__grain {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    pointer-events: none;
+    opacity: 0.055;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+  }
+
+  .wts-hero__shell {
+    position: relative;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.75rem, 4vw, 2.75rem);
+    width: 100%;
+    flex: 1;
+    justify-content: space-between;
+  }
+
+  .wts-hero__intro {
+    max-width: 44rem;
+  }
+
+  .wts-hero__intro .wts-kicker {
+    text-shadow: 0 1px 3px rgb(0 0 0 / 0.45);
+  }
+
+  .wts-hero__intro .wts-kicker::after {
+    content: "";
+    display: block;
+    width: 2.75rem;
+    height: 2px;
+    margin-top: 0.75rem;
+    border-radius: 1px;
+    background: linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-teal) 85%, transparent),
+      transparent
+    );
+  }
+
+  .wts-hero__intro .wts-title {
+    text-shadow: 0 2px 8px rgb(0 0 0 / 0.42), 0 1px 2px rgb(0 0 0 / 0.3);
+  }
+
+  .wts-hero__intro .wts-hero__copy {
+    text-shadow: 0 1px 4px rgb(0 0 0 / 0.38);
+  }
+
+  .wts-hero__paths {
+    width: 100%;
+    padding-top: 0.25rem;
+  }
+
+  .wts-kicker {
+    margin: 0 0 0.75rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-white) 88%, var(--color-teal-light));
+  }
+
+  .wts-title {
+    margin: 0 0 var(--space-md);
+    font-family: var(--font-heading);
+    font-size: clamp(1.75rem, 4.5vw, 2.35rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    line-height: 1.2;
+    color: var(--color-white);
+  }
+
+  .wts-title em {
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: color-mix(in srgb, var(--color-teal-light) 55%, white);
+  }
+
+  .wts-hero__copy {
+    margin: 0 0 var(--space-lg);
+    font-size: clamp(1rem, 2.1vw, 1.08rem);
+    line-height: 1.75;
+    color: rgba(255, 255, 255, 0.94);
+  }
+
+  .wts-hero__copy p {
+    margin: 0 0 1rem;
+  }
+
+  .wts-hero__copy p:last-child {
+    margin-bottom: 0;
+  }
+
+  .wts-hero__copy-muted {
+    font-size: 0.95rem;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  .wts-path-kicker {
+    margin: 0 0 0.5rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-teal-muted) 85%, var(--color-charcoal));
+  }
+
+  .wts-path-intro {
+    margin: 0 0 var(--space-lg);
+    max-width: 40rem;
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--color-charcoal) 78%, white);
+  }
+
+  .wts-path-grid {
+    display: grid;
+    gap: clamp(var(--space-sm), 2vw, var(--space-lg));
+    grid-template-columns: 1fr;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .wts-path-grid__item {
+    display: contents;
+  }
+
+  @media (min-width: 640px) {
+    .wts-path-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* Four skinny columns only when there is room; 2×2 reads better on laptops */
+  @media (min-width: 1280px) {
+    .wts-path-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+
+  @media (min-width: 1600px) {
+    .wts-path-grid {
+      max-width: 80rem;
+      margin-inline: auto;
+    }
+  }
+
+  .wts-path-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    min-height: 100%;
+    padding: var(--space-md);
+    border-radius: var(--radius-card);
+    text-decoration: none;
+    color: inherit;
+    background: var(--color-white);
+    border: 1px solid color-mix(in srgb, var(--color-teal) 18%, var(--color-white));
+    box-shadow: 0 2px 12px rgb(0 0 0 / 0.04);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .wts-path-card:hover {
+    border-color: color-mix(in srgb, var(--color-teal) 45%, var(--color-white));
+    box-shadow: 0 8px 28px rgb(0 0 0 / 0.08);
+    transform: translateY(-2px);
+  }
+
+  .wts-path-card:focus-visible {
+    outline: 2px solid var(--color-teal);
+    outline-offset: 2px;
+  }
+
+  .wts-path-card__go {
+    margin-top: auto;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+
+  .wts-path-card--directory {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0.85rem;
+    min-height: 5.1rem;
+    padding: clamp(0.85rem, 2vw, 1rem) var(--space-md);
+    background: linear-gradient(
+      165deg,
+      var(--color-white) 0%,
+      color-mix(in srgb, var(--color-teal) 4%, var(--color-white)) 100%
+    );
+  }
+
+  @media (max-width: 639px) {
+    .wts-path-card--directory {
+      min-height: 4.75rem;
+      padding-left: calc(var(--space-md) + 2px);
+      border-left: 3px solid color-mix(in srgb, var(--color-teal) 55%, var(--color-teal-muted));
+      border-radius: var(--radius-card);
+    }
+  }
+
+  .wts-path-card--directory:hover {
+    border-color: color-mix(in srgb, var(--color-teal) 38%, var(--color-white));
+  }
+
+  .wts-path-card__directory-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    width: 3.25rem;
+    flex-shrink: 0;
+    aspect-ratio: 1;
+    padding: 0.42rem;
+    border-radius: 0.65rem;
+    background: linear-gradient(
+      155deg,
+      color-mix(in srgb, var(--color-teal) 11%, var(--color-white)),
+      color-mix(in srgb, var(--color-teal-light) 9%, var(--color-white))
+    );
+    border: 1px solid color-mix(in srgb, var(--color-teal) 22%, var(--color-white));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.72),
+      0 1px 2px rgb(0 0 0 / 0.04);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease,
+      transform 0.2s ease;
+  }
+
+  .wts-path-card--directory:hover .wts-path-card__directory-visual {
+    border-color: color-mix(in srgb, var(--color-teal) 42%, var(--color-white));
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.85),
+      0 2px 8px color-mix(in srgb, var(--color-teal) 18%, transparent);
+    transform: scale(1.03);
+  }
+
+  /* Child component root uses its own data-astro-*; pierce with :global */
+  .wts-path-card__directory-visual :global(.category-mark) {
+    width: 2.35rem;
+    height: 2.35rem;
+    max-width: 100%;
+    color: var(--color-teal-muted);
+  }
+
+  .wts-path-card__directory-visual :global(.category-mark svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .wts-path-card__directory-text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 0.35rem;
+    min-width: 0;
+    align-self: stretch;
+  }
+
+  .wts-path-card--directory .wts-path-card__directory-head {
+    font-family: var(--font-heading);
+    font-size: clamp(0.98rem, 1.9vw, 1.06rem);
+    font-weight: 700;
+    letter-spacing: 0.025em;
+    line-height: 1.28;
+    color: var(--color-teal-muted);
+  }
+
+  .wts-path-card--directory .wts-path-card__directory-sub {
+    flex: 1;
+    min-height: 0;
+    font-size: 0.88rem;
+    line-height: 1.52;
+    color: color-mix(in srgb, var(--color-charcoal) 80%, white);
+  }
+
+  .wts-path-card--directory .wts-path-card__go {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35em;
+    margin-top: auto;
+    padding-top: 0.35rem;
+  }
+
+  .wts-path-card--directory .wts-path-card__go::after {
+    content: "";
+    display: block;
+    width: 0.35rem;
+    height: 0.35rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(-45deg) translateY(-0.05em);
+    opacity: 0.85;
+  }
+
+  .wts-journey-shell {
+    max-width: 36rem;
+  }
+
+  .wts-journey-intro {
+    margin: 0 0 var(--space-lg);
+    font-size: 1rem;
+    line-height: 1.65;
+    color: color-mix(in srgb, var(--color-charcoal) 78%, white);
+  }
+
+  .wts-journey {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    position: relative;
+  }
+
+  .wts-journey::before {
+    content: "";
+    position: absolute;
+    left: calc(2.55rem / 2 - 1px);
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 2px;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-teal) 55%, transparent),
+      color-mix(in srgb, var(--color-teal-light) 35%, transparent)
+    );
+    border-radius: 1px;
+  }
+
+  .wts-journey li {
+    position: relative;
+    display: grid;
+    grid-template-columns: 2.55rem 1fr;
+    gap: var(--space-md);
+    padding-bottom: var(--space-lg);
+    align-items: start;
+  }
+
+  .wts-journey li:last-child {
+    padding-bottom: 0;
+  }
+
+  .wts-journey__marker {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.2rem;
+    width: 2.55rem;
+    min-height: 3.1rem;
+    padding: 0.35rem 0.2rem;
+    border-radius: 999px;
+    font-family: var(--font-heading);
+    font-weight: 700;
+    color: var(--color-white);
+    background: var(--color-teal);
+    box-shadow: 0 0 0 4px var(--color-paper-cool);
+  }
+
+  .wts-journey__mark-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-white);
+    line-height: 0;
+  }
+
+  .wts-journey__mark-icon :global(svg) {
+    display: block;
+    width: 1.05rem;
+    height: 1.05rem;
+  }
+
+  .wts-journey__mark-num {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1;
+    opacity: 0.95;
+  }
+
+  .wts-journey__body {
+    padding-top: 0.15rem;
+  }
+
+  .wts-journey__label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+
+  .wts-journey__text {
+    margin: 0;
+    font-size: 0.98rem;
+    line-height: 1.65;
+    color: color-mix(in srgb, var(--color-charcoal) 85%, white);
+  }
+
+  .wts-browser-strip {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    margin: 0 0 var(--space-md);
+  }
+
+  .wts-browser-strip__chip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.85rem;
+    height: 2.85rem;
+    border-radius: 50%;
+    color: var(--color-teal-muted);
+    background: color-mix(in srgb, var(--color-teal) 9%, var(--color-white));
+    border: 1px solid color-mix(in srgb, var(--color-teal) 16%, var(--color-border-subtle));
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.04);
+  }
+
+  .wts-browser-strip__chip :global(.category-mark) {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+
+  .wts-browser-strip__chip :global(.category-mark svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .wts-different {
+    max-width: 56rem;
+    margin-inline: auto;
+  }
+
+  .wts-different__lede {
+    margin: 0 0 var(--space-lg);
+    max-width: 38rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--color-charcoal) 82%, white);
+  }
+
+  .wts-split {
+    display: grid;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+  }
+
+  @media (min-width: 768px) {
+    .wts-split {
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+    }
+  }
+
+  .wts-split__panel {
+    padding: var(--space-md);
+    border-radius: var(--radius-card);
+    background: var(--color-cream);
+    border: 1px solid color-mix(in srgb, var(--color-charcoal) 8%, var(--color-cream));
+  }
+
+  .wts-split__panel--brand {
+    background: color-mix(in srgb, var(--color-teal) 7%, var(--color-white));
+    border-color: color-mix(in srgb, var(--color-teal) 22%, var(--color-white));
+  }
+
+  .wts-split__h {
+    margin: 0 0 var(--space-sm);
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: var(--color-teal-muted);
+  }
+
+  .wts-split__list {
+    margin: 0;
+    padding-left: 1.1rem;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--color-charcoal) 85%, white);
+  }
+
+  .wts-split__list li {
+    margin-bottom: 0.4rem;
+  }
+
+  .wts-split__list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .wts-standouts {
+    display: grid;
+    gap: var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  @media (min-width: 768px) {
+    .wts-standouts {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .wts-standouts__item {
+    padding: var(--space-md);
+    border-left: 3px solid var(--color-teal);
+    background: var(--color-cream);
+    border-radius: 0 var(--radius-card) var(--radius-card) 0;
+  }
+
+  .wts-standouts__tag {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-teal);
+  }
+
+  .wts-standouts__item p {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: color-mix(in srgb, var(--color-charcoal) 86%, white);
+  }
+
+  .wts-different__about {
+    margin: 0;
+  }
+
+  .wts-hero__copy a {
+    color: var(--color-white);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+    text-decoration-color: rgba(255, 255, 255, 0.45);
+  }
+
+  .wts-hero__copy a:hover {
+    text-decoration-color: var(--color-white);
+  }
+
+  .wts-hero__cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    align-items: center;
+  }
+
+  @media (max-width: 520px) {
+    .wts-hero__cta {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .wts-hero__cta .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .wts-hero__btn-primary {
+    box-shadow: 0 6px 20px rgb(0 0 0 / 0.2);
+  }
+
+  .wts-section-h2 {
+    position: relative;
+    margin: 0 0 var(--space-sm);
+    padding-bottom: var(--space-xs);
+    font-family: var(--font-heading);
+    font-size: clamp(1.45rem, 3.2vw, 1.85rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: none;
+    line-height: 1.2;
+    color: var(--color-teal-muted);
+  }
+
+  .wts-section-h2--dark {
+    color: var(--color-charcoal);
+  }
+
+  .wts-section-h2::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 2.75rem;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-teal), var(--color-teal-light));
+    border-radius: 1px;
+  }
+
+  /* Path block sits on the photo: must override .wts-path-* / .wts-section-h2 (defined above in this file) */
+  .wts-hero__paths .wts-path-kicker {
+    color: rgba(255, 255, 255, 0.98);
+    text-shadow: 0 1px 3px rgb(0 0 0 / 0.45);
+  }
+
+  .wts-hero__paths .wts-section-h2 {
+    color: var(--color-white);
+    text-shadow: 0 2px 6px rgb(0 0 0 / 0.4);
+  }
+
+  .wts-hero__paths .wts-section-h2::after {
+    background: linear-gradient(90deg, var(--color-teal-light), rgba(255, 255, 255, 0.75));
+  }
+
+  .wts-hero__paths .wts-path-intro {
+    color: rgba(255, 255, 255, 0.96);
+    text-shadow: 0 1px 4px rgb(0 0 0 / 0.38);
+  }
+
+  .wts-section-lede {
+    margin: 0 0 var(--space-lg);
+    max-width: 44rem;
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--color-charcoal) 78%, white);
+  }
+
+  .wts-section-lede a {
+    font-weight: 600;
+  }
+
+  .wts-narrow {
+    max-width: 40rem;
+  }
+
+  .wts-narrow p {
+    margin: 0;
+    font-size: 1.02rem;
+    line-height: 1.75;
+    color: color-mix(in srgb, var(--color-charcoal) 82%, white);
+  }
+
+  .wts-foot__inner {
+    max-width: 38rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .wts-foot__title {
+    margin: 0 0 var(--space-sm);
+    font-family: var(--font-heading);
+    font-size: clamp(1.35rem, 3vw, 1.75rem);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.25;
+    color: var(--color-white);
+  }
+
+  .wts-foot__lede {
+    margin: 0 0 var(--space-lg);
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  .wts-foot__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 520px) {
+    .wts-foot__actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .wts-foot__actions .btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .btn--on-teal {
+    background: var(--color-white);
+    color: var(--color-teal);
+    font-weight: 700;
+  }
+
+  .btn--on-teal:hover {
+    background: color-mix(in srgb, var(--color-white) 90%, var(--color-teal));
+    color: var(--color-teal-muted);
+  }
+
+  .btn--ghost-light {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.65);
+    color: var(--color-white);
+  }
+
+  .btn--ghost-light:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--color-white);
+  }
+</style>
