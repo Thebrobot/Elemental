@@ -1,6 +1,6 @@
 ---
 title: "Neuromodulators vs. dermal fillers: which addresses your concern?"
-description: "Understand when Botox or Jeuveau fits versus fillers at our Elkhorn med spa, so you can book the right consult."
+description: "Understand when Botox or Jeuveau fits versus fillers at our Elkhorn clinic, so you can book the right consult."
 pubDate: 2026-04-01
 heroImage: /images/blog/blog-neuromodulators.png
 tags: ["injectables", "education"]

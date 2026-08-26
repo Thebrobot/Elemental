@@ -5,9 +5,9 @@ import type { NavMegaColumn, NavServiceItem, NavServiceSection } from "./navType
 export const siteConfig = {
   name: "Elemental Skin & Body Medical Aesthetics",
   legalName: "Elemental Skin & Body Medical Aesthetics",
-  tagline: "Physician-led med spa in Elkhorn, Wisconsin",
+  tagline: "Medical aesthetics clinic in Elkhorn, Wisconsin",
   description:
-    "Physician-led med spa in Elkhorn, WI: Botox, fillers, laser, Morpheus8, body contouring & medical weight loss. Serving Walworth County, Lake Geneva & beyond.",
+    "Medical aesthetics clinic in Elkhorn, WI: Botox, fillers, laser, Morpheus8, body contouring & medical weight loss. Serving Walworth County, Lake Geneva & beyond.",
 
   url: "https://elementalskinandbody.com",
   phone: "",
@@ -73,7 +73,6 @@ export const siteConfig = {
               { label: "Botox & Jeuveau", href: "/services/injectables/botox-jeuveau" },
               { label: "Dermal Fillers", href: "/services/injectables/dermal-fillers" },
               { label: "BioFill", href: "/services/injectables/biofill" },
-              { label: "Vampire Facial", href: "/services/injectables/vampire-facial" },
               { label: "Vampire Facelift", href: "/services/injectables/vampire-facelift" },
             ],
           },
@@ -87,7 +86,7 @@ export const siteConfig = {
             title: "Skin & laser",
             items: [
               { label: "Diamond Glow", href: "/services/skin/diamond-glow" },
-              { label: "Elemental Facial", href: "/services/skin/elemental-facial" },
+              { label: "Vampire Facial", href: "/services/skin/vampire-facial" },
               { label: "Dermaplaning", href: "/services/skin/dermaplaning" },
               { label: "Chemical Peels", href: "/services/skin/chemical-peels" },
               { label: "Hyfrecator", href: "/services/skin/hyfrecator" },
@@ -108,9 +107,9 @@ export const siteConfig = {
               { label: "Laser Hair Removal", href: "/services/body/laser-hair-removal" },
               { label: "FaceTite", href: "/services/body/facetite" },
               { label: "BodyTite", href: "/services/body/bodytite" },
+              { label: "Liposuction", href: "/services/body/liposuction" },
               { label: "Quantum", href: "/services/body/quantum" },
               { label: "Emsculpt Neo", href: "/services/body/emsculpt-neo" },
-              { label: "Emsella", href: "/services/body/emsella" },
               { label: "Shockwave", href: "/services/body/shockwave" },
             ],
           },
@@ -129,6 +128,8 @@ export const siteConfig = {
               { label: "PRP Joint Injections", href: "/services/wellness/prp-joint-injections" },
               { label: "O-Shot (Women)", href: "/services/wellness/o-shot" },
               { label: "P-Shot (Men)", href: "/services/wellness/p-shot" },
+              { label: "Emsella", href: "/services/wellness/emsella" },
+              { label: "Shockwave — Sexual Health", href: "/services/wellness/shockwave-sexual-health" },
               { label: "IV Therapies / Peptides", href: "/services/wellness/iv-therapies-peptides" },
               { label: "B-12 / MIC Injections", href: "/services/wellness/b12-mic-injections" },
             ],
@@ -202,10 +203,10 @@ export const localBusinessSchema = {
     "@type": "OfferCatalog",
     name: "Medical Aesthetic & Wellness Services",
     itemListElement: [
-      { "@type": "OfferCatalog", name: "Injectables & PRP: Botox, Jeuveau, Dermal Fillers, BioFill, Vampire Facial" },
-      { "@type": "OfferCatalog", name: "Skin & Laser Treatments: Diamond Glow, IPL, Morpheus8, Microneedling, Chemical Peels" },
-      { "@type": "OfferCatalog", name: "Body Contouring & Devices: Emsculpt Neo, Emsella, FaceTite, BodyTite, Laser Hair Removal" },
-      { "@type": "OfferCatalog", name: "Wellness & Performance: Medical Weight Loss, Hormone Therapy, IV Therapies, Peptides" },
+      { "@type": "OfferCatalog", name: "Injectables & PRP: Botox, Jeuveau, Dermal Fillers, BioFill, Vampire Facelift" },
+      { "@type": "OfferCatalog", name: "Skin & Laser Treatments: Diamond Glow, Vampire Facial, IPL, Morpheus8, Microneedling, Chemical Peels" },
+      { "@type": "OfferCatalog", name: "Body Contouring & Devices: Emsculpt Neo, Liposuction, FaceTite, BodyTite, Laser Hair Removal" },
+      { "@type": "OfferCatalog", name: "Wellness & Performance: Medical Weight Loss, Hormone Therapy, Emsella, Shockwave Sexual Health, IV Therapies, Peptides" },
     ],
   },
   ...(siteConfig.schema.openingHours.length

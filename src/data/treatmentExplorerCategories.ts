@@ -15,10 +15,11 @@ const categoryExplorerTabLabels: Record<ServiceCategory, string> = {
 
 const categoryExplorerIntros: Record<ServiceCategory, string> = {
   injectables:
-    "Neuromodulators, fillers, BioFill, and PRP facial options, planned around your expression, volume, and goals.",
-  skin: "Facials, peels, IPL, microneedling, Morpheus8, and supporting skin services for tone, texture, and clarity.",
-  body: "Contour, tighten, smooth, and strengthen with laser hair removal, RF, and muscle-stimulation technologies.",
-  wellness: "Medical weight loss, hormones, labs, IV and peptide support, and intimate wellness, guided with follow-up.",
+    "Neuromodulators, fillers, BioFill, and Vampire Facelift, planned around your expression, volume, and goals.",
+  skin: "Vampire Facial, peels, IPL, microneedling, Morpheus8, and supporting skin services for tone, texture, and clarity.",
+  body: "Contour, tighten, and refine with liposuction, laser hair removal, RF, and muscle-stimulation technologies.",
+  wellness:
+    "Medical weight loss, hormones, labs, Emsella, shockwave sexual health, IV and peptide support, guided with follow-up.",
 };
 
 /** Shared tab + treatment list data for `TreatmentCategoryExplorer` (homepage, where-to-start, etc.). */

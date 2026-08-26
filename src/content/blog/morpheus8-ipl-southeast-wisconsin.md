@@ -26,4 +26,4 @@ Sometimes **sequencing** matters more than choosing one forever. A personalized 
 
 ## Where we treat
 
-Our physician-led team performs these services in **Elkhorn, WI**, serving guests from **Lake Geneva**, Delavan, Whitewater, and across southeast Wisconsin. Explore all [skin and laser treatments](/services/skin/diamond-glow) or book a consult to match a device to your goals.
+Our team performs these services in **Elkhorn, WI**, serving guests from **Lake Geneva**, Delavan, Whitewater, and across southeast Wisconsin. Explore all [skin and laser treatments](/services/skin/diamond-glow) or book a consult to match a device to your goals.

@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import { siteConfig } from "../config/siteConfig";
 
 const title = `About Us | ${siteConfig.name} - Elkhorn, WI`;
-const description = `Learn about ${siteConfig.name}-our mission, medical aesthetics focus, and commitment to transparent, patient-centered care in Elkhorn, WI.`;
+const description = `Learn about ${siteConfig.name}-our mission, vision, and commitment to transparent, patient-centered care in Elkhorn, WI.`;
 
 const booking = siteConfig.bookingUrl || "#";
 const bookingIsExternal = booking.startsWith("http");
@@ -15,7 +15,7 @@ const bookingIsExternal = booking.startsWith("http");
       <p class="kicker">About Us</p>
       <h1 id="about-heading">Medical aesthetics rooted in education and trust</h1>
       <p class="lede">
-        {siteConfig.name} exists so you can access physician-led injectables, skin and laser treatments, body contouring, and wellness services in one Elkhorn destination-without sacrificing clarity or comfort.
+        {siteConfig.name} exists so you can access injectables, skin and laser treatments, body contouring, and wellness services in one Elkhorn destination-without sacrificing clarity or comfort.
       </p>
     </div>
   </section>
@@ -25,10 +25,11 @@ const bookingIsExternal = booking.startsWith("http");
       <div>
         <h2 id="mission-heading">Our mission</h2>
         <p>
-          We believe aesthetic medicine should feel collaborative. Every visit blends clinical rigor with space to ask questions, understand tradeoffs, and build a plan that respects your timeline and budget.
+          To work in collaboration with every client to learn the goals and desired image; accomplishing the greater satisfaction in your own skin and body.
         </p>
+        <h2 id="vision-heading">Our vision</h2>
         <p>
-          Whether you are refining skin texture, sculpting the body you feel confident in, or addressing hormones and metabolism with labs and medical oversight, our team focuses on predictable, natural-looking outcomes.
+          For all to accept, embrace and love their own uniqueness and beauty.
         </p>
         <a
           class="btn"
@@ -41,15 +42,15 @@ const bookingIsExternal = booking.startsWith("http");
       </div>
       <div class="approach-pillars">
         <div class="pillar">
-          <h3>Clinical depth</h3>
+          <h3>Dedication to science</h3>
           <p>Protocols built on anatomy, device physics, and evidence-not trends for their own sake.</p>
         </div>
         <div class="pillar">
-          <h3>Warmth</h3>
+          <h3>Compassion</h3>
           <p>We slow down, listen, and translate jargon into plain language you can act on.</p>
         </div>
         <div class="pillar">
-          <h3>Continuity</h3>
+          <h3>Whole Body</h3>
           <p>Skin, body, and wellness live under one roof so your roadmap stays cohesive over time.</p>
         </div>
       </div>
@@ -82,6 +83,10 @@ const bookingIsExternal = booking.startsWith("http");
     font-size: 1.05rem;
     max-width: 40rem;
     line-height: 1.7;
+  }
+
+  #vision-heading {
+    margin-top: var(--space-lg);
   }
 
   .about-grid {

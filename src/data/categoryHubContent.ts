@@ -19,21 +19,21 @@ const heroHeadline: Record<ServiceCategory, string> = {
 /** Short supporting line under the hero (aligned with homepage outcome cards). */
 const heroTagline: Record<ServiceCategory, string> = {
   injectables: "Neuromodulators, fillers & PRP mapped to your face, not a template.",
-  skin: "Facials, peels, IPL & microneedling for your goals and downtime.",
-  body: "Body contouring, tightening, laser hair removal & core support.",
-  wellness: "Medical weight loss, BHRT, labs, IV therapies & private consults.",
+  skin: "Vampire Facial, peels, IPL & microneedling for your goals and downtime.",
+  body: "Body contouring, tightening, liposuction & laser hair removal.",
+  wellness: "Medical weight loss, BHRT, labs, Emsella, shockwave & private consults.",
 };
 
 /** Unique meta descriptions (~150–160 chars) for category hub pages. */
 const metaDescription: Record<ServiceCategory, string> = {
   injectables:
-    "Explore injectables in Elkhorn, WI: Botox, Jeuveau, fillers, BioFill, Vampire Facial & Facelift. Physician-led mapping, not a template. Elemental Skin & Body.",
+    "Explore injectables in Elkhorn, WI: Botox, Jeuveau, fillers, BioFill & Vampire Facelift. Mapped to your face, not a template. Elemental Skin & Body.",
   skin:
-    "Skin & laser in Elkhorn, WI: Diamond Glow, peels, IPL, microneedling, Morpheus8 & more. Browse treatments and book at Elemental Skin & Body Medical Aesthetics.",
+    "Skin & laser in Elkhorn, WI: Diamond Glow, Vampire Facial, peels, IPL, microneedling, Morpheus8 & more. Book at Elemental Skin & Body Medical Aesthetics.",
   body:
-    "Body & devices in Elkhorn, WI: laser hair removal, FaceTite, BodyTite, Emsculpt Neo, Emsella & more. Physician-led Elemental Skin & Body, Walworth County.",
+    "Body & devices in Elkhorn, WI: laser hair removal, FaceTite, BodyTite, liposuction, Emsculpt Neo & more. Elemental Skin & Body, Walworth County.",
   wellness:
-    "Wellness services in Elkhorn, WI: medical weight loss, BHRT, labs, IV therapies, PRP joints & intimate wellness. Elemental Skin & Body Medical Aesthetics.",
+    "Wellness in Elkhorn, WI: medical weight loss, BHRT, labs, Emsella, shockwave sexual health, IV therapies & PRP. Elemental Skin & Body Medical Aesthetics.",
 };
 
 export function getCategoryHubPageTitleFocus(category: ServiceCategory): string {

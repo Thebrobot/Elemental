@@ -9,4 +9,9 @@ export default defineConfig({
   site,
   output: "static",
   integrations: [react(), sitemap()],
+  redirects: {
+    "/services/injectables/vampire-facial": "/services/skin/vampire-facial",
+    "/services/skin/elemental-facial": "/services/skin/",
+    "/services/body/emsella": "/services/wellness/emsella",
+  },
 });

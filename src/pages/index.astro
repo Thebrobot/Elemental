@@ -16,7 +16,7 @@ import outcomeSkin from "../assets/images/home-outcomes/home-outcome-skin.png";
 import outcomeBody from "../assets/images/home-outcomes/home-outcome-body.png";
 import outcomeWellness from "../assets/images/home-outcomes/home-outcome-wellness.png";
 
-const title = `Med Spa Elkhorn, WI | Injectables, Laser & Wellness | ${siteConfig.name}`;
+const title = `Medical Aesthetics Clinic Elkhorn, WI | Injectables, Laser & Wellness | ${siteConfig.name}`;
 const description = siteConfig.description;
 const booking = siteConfig.bookingUrl || "#";
 const bookingIsExternal = booking.startsWith("http");
@@ -52,21 +52,21 @@ const outcomePhotoCards: OutcomeCard[] = [
   },
   {
     title: "Clearer tone & smoother texture",
-    tagline: "Facials, peels, IPL & microneedling for your goals and downtime.",
+    tagline: "Vampire Facial, peels, IPL & microneedling for your goals and downtime.",
     hubHref: "/services/skin/",
     image: outcomeSkin,
     ariaLabel: "Skin and laser: clearer tone and smoother texture, browse category",
   },
   {
     title: "Shape, tighten & feel stronger",
-    tagline: "Body contouring, tightening, laser hair removal & core support.",
+    tagline: "Body contouring, tightening, liposuction & laser hair removal.",
     hubHref: "/services/body/",
     image: outcomeBody,
     ariaLabel: "Body: shape, tighten, and feel stronger, browse category",
   },
   {
     title: "Weight, hormones & whole-person care",
-    tagline: "Medical weight loss, BHRT, labs, IV therapies & private consults.",
+    tagline: "Medical weight loss, BHRT, labs, Emsella, shockwave & private consults.",
     hubHref: "/services/wellness/",
     image: outcomeWellness,
     ariaLabel: "Wellness: weight, hormones, and whole-person care, browse category",
@@ -143,8 +143,8 @@ const faqCategories = [
         a: "We are located in Elkhorn, Wisconsin, the county seat of Walworth County. Patients visit us from Lake Geneva, Delavan, Whitewater, Burlington, Janesville, Kenosha, Racine, and throughout southeast Wisconsin.",
       },
       {
-        q: "What is a medical spa (med spa), and how is it different from a day spa?",
-        a: "A medical spa (med spa) combines the relaxing environment of a day spa with physician-overseen, clinical-grade treatments, such as Botox, laser resurfacing, body contouring, and medical weight loss, that are not available at traditional spas. At Elemental Skin & Body, a licensed medical provider supervises all treatments.",
+        q: "How is your Elkhorn clinic different from a day spa?",
+        a: "Elemental Skin & Body is a medical aesthetics clinic. Visits are clinical appointments for treatments such as Botox, laser, body contouring, and medical weight loss. A licensed medical provider supervises care. Unlike a traditional day spa, the focus is your goals, safety, and results.",
       },
       {
         q: "Do you serve patients outside Elkhorn?",
@@ -187,8 +187,8 @@ const faqCategories = [
     label: "Skin & laser",
     items: [
       {
-        q: "What skin treatments are available at your Elkhorn med spa?",
-        a: "We offer Diamond Glow facials, chemical peels, dermaplaning, IPL photofacials, microneedling, Morpheus8 (RF microneedling), and our signature Elemental Facial, all customized to your skin type and goals.",
+        q: "What skin treatments are available at your Elkhorn clinic?",
+        a: "We offer Diamond Glow, Vampire Facial, chemical peels, dermaplaning, IPL photofacials, microneedling, and Morpheus8 (RF microneedling), all customized to your skin type and goals.",
       },
       {
         q: "When will I see results after a peel or laser treatment?",
@@ -196,7 +196,7 @@ const faqCategories = [
       },
       {
         q: "What is Morpheus8 and is it available near Lake Geneva, WI?",
-        a: "Morpheus8 is a fractional RF microneedling device that remodels skin and subdermal fat for tightening, scar revision, and texture improvement. It is available at our Elkhorn, WI med spa, conveniently located about 15 miles from Lake Geneva.",
+        a: "Morpheus8 is a fractional RF microneedling device that remodels skin and subdermal fat for tightening, scar revision, and texture improvement. It is available at our Elkhorn, WI clinic, conveniently located about 15 miles from Lake Geneva.",
       },
       {
         q: "Can I combine Diamond Glow with injectables on the same day?",
@@ -274,11 +274,10 @@ const faqPageLd = {
     <div class="hero__overlay" aria-hidden="true"></div>
     <div class="container hero__inner">
       <p class="hero__kicker">
-        Physician-led med spa · {siteConfig.address.city}, {siteConfig.address.state}
+        Medical aesthetics clinic · {siteConfig.address.city}, {siteConfig.address.state}
       </p>
       <h1 id="hero-heading" class="hero__headline">
-        <span class="hero__headline-pre">Empowering Your</span>
-        <span class="hero__headline-em">Unique Beauty</span>
+        <span class="hero__headline-em">Redefining Beauty</span>
       </h1>
       <p class="hero__tagline">
         We provide personalized, science-backed aesthetic treatments designed to enhance your natural beauty and confidence.
@@ -366,7 +365,7 @@ const faqPageLd = {
             <p>Clear expectations on visits, pricing conversations, and aftercare so you always know what comes next.</p>
           </div>
           <div class="pillar">
-            <h3>Continuity</h3>
+            <h3>Whole Body</h3>
             <p>Skin, body, and wellness services live under one roof for cohesive, long-term support.</p>
           </div>
         </div>
@@ -383,7 +382,7 @@ const faqPageLd = {
         <Image
           class="approach__img"
           src={approachSection}
-          alt="Calm med spa suite with soft daylight, neutral decor, and treatment seating, reflecting a thoughtful, educational visit."
+          alt="Calm clinic treatment suite with soft daylight, neutral decor, and treatment seating, reflecting a thoughtful, educational visit."
           width={1000}
           height={704}
           loading="lazy"
@@ -394,6 +393,24 @@ const faqPageLd = {
           sizes="(min-width: 900px) 42vw, 100vw"
         />
       </figure>
+    </div>
+  </section>
+
+  <section class="section section--cream" aria-labelledby="mission-heading">
+    <div class="container mission-vision">
+      <div class="mission-vision__block">
+        <p class="kicker">Who we are</p>
+        <h2 id="mission-heading" class="section-h2">Our Mission</h2>
+        <p>
+          To work in collaboration with every client to learn the goals and desired image; accomplishing the greater
+          satisfaction in your own skin and body.
+        </p>
+      </div>
+      <div class="mission-vision__block">
+        <p class="kicker">Where we are headed</p>
+        <h2 class="section-h2">Our Vision</h2>
+        <p>For all to accept, embrace and love their own uniqueness and beauty.</p>
+      </div>
     </div>
   </section>
 
@@ -461,7 +478,7 @@ const faqPageLd = {
   <section class="section section--cta-band" aria-labelledby="cta-band-heading">
     <div class="container cta-band__inner">
       <h2 id="cta-band-heading">Ready when you are</h2>
-      <p>Book a consultation at our Elkhorn, WI med spa or send a message. We serve patients from Lake Geneva, Janesville, Kenosha, and throughout southeast Wisconsin.</p>
+      <p>Book a consultation at our Elkhorn, WI clinic or send a message. We serve patients from Lake Geneva, Janesville, Kenosha, and throughout southeast Wisconsin.</p>
       <div class="cta-band__actions">
         <a
           class="btn btn--on-teal"
@@ -963,6 +980,26 @@ const faqPageLd = {
     margin: 0;
     font-size: 0.9rem;
     color: color-mix(in srgb, var(--color-charcoal) 75%, white);
+  }
+
+  .mission-vision {
+    display: grid;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  @media (min-width: 800px) {
+    .mission-vision {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .mission-vision__block p:last-child {
+    margin: 0;
+    max-width: 36rem;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--color-charcoal) 82%, white);
   }
 
   .approach__visual {

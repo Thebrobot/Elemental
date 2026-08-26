@@ -1,6 +1,6 @@
 ---
 title: "Medical weight loss: what physician-guided support actually includes"
-description: "GLP-1 therapies, labs, and follow-up: how a med spa program in Elkhorn, WI stays safe and personalized."
+description: "GLP-1 therapies, labs, and follow-up: how a medical weight loss program in Elkhorn, WI stays safe and personalized."
 pubDate: 2026-04-11
 heroImage: /images/blog/blog-wellness-metabolic.png
 tags: ["wellness", "weight loss", "education"]

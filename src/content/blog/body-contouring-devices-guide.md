@@ -1,6 +1,6 @@
 ---
 title: "Body contouring devices: how Emsculpt Neo, Emsella, and radiofrequency fit together"
-description: "A plain-language overview of popular body and pelvic-floor options at our Elkhorn med spa."
+description: "A plain-language overview of popular body and pelvic-floor options at our Elkhorn clinic."
 pubDate: 2026-04-08
 heroImage: /images/blog/blog-body-contouring.png
 tags: ["body", "devices", "education"]
@@ -14,7 +14,7 @@ tags: ["body", "devices", "education"]
 
 ## Pelvic floor and confidence: Emsella®
 
-[Emsella](/services/body/emsella) uses high-intensity focused electromagnetic energy to stimulate pelvic floor muscles, often discussed in the context of stress incontinence or postpartum recovery. It is a **non-invasive, fully clothed** option for appropriate candidates.
+[Emsella](/services/wellness/emsella) uses high-intensity focused electromagnetic energy to stimulate pelvic floor muscles, often discussed in the context of stress incontinence or postpartum recovery. It is a **non-invasive, fully clothed** option for appropriate candidates.
 
 ## Minimally invasive tightening: FaceTite & BodyTite
 
@@ -22,7 +22,7 @@ For patients considering **radiofrequency-assisted lipolysis** with more dramati
 
 ## Hair removal and other options
 
-We also offer [laser hair removal](/services/body/laser-hair-removal), [Quantum](/services/body/quantum), and [Shockwave](/services/body/shockwave) among our [body and device services](/services/body/laser-hair-removal), each with distinct indications.
+We also offer [laser hair removal](/services/body/laser-hair-removal), [Quantum](/services/body/quantum), [liposuction](/services/body/liposuction), and [Shockwave](/services/body/shockwave) among our [body and device services](/services/body/laser-hair-removal), each with distinct indications.
 
 ## Your next step
 

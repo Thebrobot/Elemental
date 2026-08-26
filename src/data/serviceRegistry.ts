@@ -293,7 +293,7 @@ const biofill: ServiceDefinition = {
 };
 
 const vampireFacial: ServiceDefinition = {
-  category: "injectables",
+  category: "skin",
   slug: "vampire-facial",
   name: "Vampire Facial",
   metaDescription:
@@ -506,7 +506,7 @@ const diamondGlow: ServiceDefinition = {
   heroImage: {
     label: "HERO PHOTO",
     caption:
-      "DiamondGlow device handpiece resting elegantly on a clean treatment table in a modern spa-style room. Teal accent details. Professional and inviting, no patient visible.",
+      "DiamondGlow device handpiece resting elegantly on a clean treatment table in a modern clinic treatment room. Teal accent details. Professional and inviting, no patient visible.",
   },
   bodyImage: {
     label: "TREATMENT PHOTO",
@@ -516,7 +516,7 @@ const diamondGlow: ServiceDefinition = {
   faq: [
     {
       q: "How is this different from a regular facial?",
-      a: "DiamondGlow uses a medical-grade device to exfoliate, extract, and infuse simultaneously rather than relying on manual pressure and surface-only products. The serum infusion step makes it meaningfully more effective than most spa facials.",
+      a: "DiamondGlow uses a medical-grade device to exfoliate, extract, and infuse simultaneously rather than relying on manual pressure and surface-only products. The serum infusion step makes it meaningfully more effective than most traditional facials.",
     },
     {
       q: "Can I get it done right before a big event?",
@@ -533,86 +533,6 @@ const diamondGlow: ServiceDefinition = {
     {
       q: "Can it be combined with other services?",
       a: "Yes. DiamondGlow pairs well with neuromodulators, chemical peels (not the same day), and light-based treatments when sequenced appropriately.",
-    },
-  ],
-};
-
-const elementalFacial: ServiceDefinition = {
-  category: "skin",
-  slug: "elemental-facial",
-  name: "Elemental Facial",
-  metaDescription:
-    "The Elemental signature facial in Elkhorn, WI - fully customized to your skin's season, sensitivity, and goals. Medical-grade professional facial care.",
-  heroDescription:
-    "Your skin has a season, and no two are alike. Our signature facial is designed around your skin that day-not a fixed menu applied to everyone who walks through the door.",
-  whatIsIt: [
-    "The Elemental Facial is our signature professional facial built around a real-time assessment of your skin's current state-its hydration level, sensitivity, active concerns, and overall condition-rather than a locked-in protocol.",
-    "Each session blends professional exfoliation, targeted treatment masks, and restorative techniques selected specifically for you. Whether your skin is reacting to stress, seasonal changes, breakouts, or dryness, the steps adapt so your skin leaves better than it arrived.",
-  ],
-  howItWorks: [
-    "Skin consultation at the start of each visit-what's changed since last time, what's bothering you most, and what your skin looks like under a magnifying lamp.",
-    "Customized cleansing, exfoliation, and extractions (if appropriate) matched to your skin's current congestion level and sensitivity.",
-    "Targeted mask, serum, and massage steps selected to address your primary concern-hydration, brightening, calming, or balancing.",
-    "Home-care recommendations adjusted to what your skin needs this season.",
-  ],
-  benefits: [
-    "Fully personalized protocol-no two visits are identical if your skin has changed",
-    "Safe for sensitive, rosacea-prone, dry, oily, and combination skin types",
-    "Professional exfoliation and extractions with no trauma or unnecessary irritation",
-    "Deeply relaxing-addresses both skin health and the stress that often drives skin issues",
-    "Ideal as a standalone treatment or as preparation for other services",
-  ],
-  candidate:
-    "Virtually any adult looking for professional skin care with a customized approach. Particularly valuable for patients with sensitive, reactive, or hard-to-treat skin who have been frustrated by one-size protocols. Pregnancy-safe options are available; please mention this when booking.",
-  expectBefore:
-    "Arrive with clean or makeup-free skin if possible. Mention any new skincare products, medications, or skin changes to your provider at the start of the visit.",
-  expectDuring:
-    "Sessions typically run 60–75 minutes. You'll be guided through each step with comfort as the priority throughout-if anything is too warm, too cool, or uncomfortable, your provider adjusts immediately.",
-  expectAfter:
-    "Skin typically looks calm and refreshed immediately. Avoid active exfoliating acids and retinoids for 24 hours if extractions or peeling enzymes were performed. Wear SPF the following day.",
-  atAGlance: [
-    "Visit: 60–75 min",
-    "Downtime: none",
-    "Best for: all skin types, maintenance, sensitive skin",
-  ],
-  goodFitIf: [
-    "You want a professional facial that's actually built around your skin-not a fixed spa menu",
-    "Your skin is sensitive, reactive, or has conditions that haven't responded well to standard facials",
-    "You're new to professional skin care and want to start with something approachable and educational",
-    "You've been dealing with a specific skin change-breakouts, dryness, dullness-and want expert hands on it",
-  ],
-  visitAndResults:
-    "Refreshed, calmer, clearer skin is typically visible immediately after the session. Regular visits every four to six weeks support long-term skin health and allow your provider to track and address changes over time.",
-  heroImage: {
-    label: "HERO PHOTO",
-    caption:
-      "Serene, softly lit treatment room with elegant facial tools and product bottles artfully arranged - warm, spa-like atmosphere. No patient visible. Teal accent colors.",
-  },
-  bodyImage: {
-    label: "TREATMENT PHOTO",
-    caption:
-      "Close-up of a calming facial mask applied to smooth skin - gentle warm lighting, peaceful and professional. Suggests relaxation and care.",
-  },
-  faq: [
-    {
-      q: "How is this different from a spa facial?",
-      a: "The Elemental Facial is performed by a licensed professional using medical-grade products, a real-time skin assessment, and techniques matched to your current condition rather than a fixed spa script.",
-    },
-    {
-      q: "Is it safe for rosacea or extremely sensitive skin?",
-      a: "Yes. The protocol adapts entirely to your skin's sensitivity level. Many rosacea patients find professional facials helpful when performed correctly-we never push past your skin's threshold.",
-    },
-    {
-      q: "Can I come in with makeup on?",
-      a: "We can remove makeup at the start of your visit-no need to arrive bare-faced if it's not convenient.",
-    },
-    {
-      q: "How often should I book?",
-      a: "Every four to six weeks is a popular maintenance interval. Some patients come monthly for a specific concern and then space out once skin is stable.",
-    },
-    {
-      q: "Can I combine this with other services?",
-      a: "Yes-the Elemental Facial pairs well with DiamondGlow, dermaplaning, and chemical peels when appropriate and when properly sequenced.",
     },
   ],
 };
@@ -1361,6 +1281,86 @@ const bodytite: ServiceDefinition = {
   ],
 };
 
+const liposuction: ServiceDefinition = {
+  category: "body",
+  slug: "liposuction",
+  name: "Liposuction",
+  metaDescription:
+    "Liposuction body contouring in Elkhorn, WI. Targeted fat removal for stubborn areas at Elemental Skin & Body, serving Walworth County and Lake Geneva.",
+  heroDescription:
+    "Some fat deposits stay put no matter how consistently you train or eat. Liposuction removes those stubborn pockets so your contour can match the work you have already put in.",
+  whatIsIt: [
+    "Liposuction is a body-contouring procedure that removes localized fat through small, carefully placed incisions using a thin cannula. It is designed for refinement of specific areas-not as a weight-loss method-and is most effective when your weight is already stable.",
+    `At ${BRAND}, liposuction is planned around your anatomy, skin quality, and goals. Your provider will discuss whether traditional liposuction, radiofrequency-assisted contouring such as BodyTite, or a combined plan is the better fit, so you are not sold a single technique by default.`,
+  ],
+  howItWorks: [
+    "Consultation to map treatment areas, review medical history, and set realistic expectations for contour change versus skin tightening.",
+    "Pre-procedure planning covering anesthesia approach, compression garments, activity restrictions, and recovery support.",
+    "In-office or facility procedure: tumescent fluid is used for comfort and precision, then fat is removed through small incisions in the mapped zones.",
+    "Follow-up visits to monitor healing, garment wear, and progressive contour as swelling resolves.",
+  ],
+  benefits: [
+    "Targeted removal of fat that has not responded to diet and exercise",
+    "Contour refinement in areas such as the abdomen, flanks, thighs, arms, and chin",
+    "Can be paired with skin-tightening options when laxity is also a concern",
+    "Permanent fat-cell removal in treated zones when weight remains stable",
+    "A surgical-contouring option when non-invasive devices are not enough",
+  ],
+  candidate:
+    "Adults at or near a stable, healthy weight with stubborn, localized fat deposits and enough skin elasticity for the expected contour. Significant skin excess, uncontrolled medical conditions, or a desire for overall weight loss may point to a different plan-reviewed honestly at consultation.",
+  expectBefore:
+    "Pre-procedure instructions cover medications, nicotine, hydration, and arranging help for the first 24–48 hours. Compression garments are fitted in advance. Arrive with questions; this is a planned procedure, not a walk-in treatment.",
+  expectDuring:
+    "Performed with local or tumescent anesthesia, with additional comfort measures as indicated. Duration depends on the number and size of areas treated. You remain closely monitored throughout.",
+  expectAfter:
+    "Swelling, bruising, and firmness are expected for several weeks. Compression garment wear is required. Most patients return to light activity within a few days to a week; final contour continues to refine over three to six months.",
+  atAGlance: [
+    "Visit: varies by treatment area",
+    "Downtime: compression wear; several days to 1–2 weeks",
+    "Best for: stubborn fat pockets at a stable weight",
+  ],
+  goodFitIf: [
+    "You have a specific area that will not change despite consistent diet and exercise",
+    "Your weight is stable and you want contour refinement rather than overall weight loss",
+    "Non-invasive body treatments have not delivered the change you are looking for",
+    "You are open to a recovery window in exchange for more definitive fat removal",
+  ],
+  visitAndResults:
+    "Early contour change appears as swelling recedes over the first two to four weeks. Residual swelling and tissue settling continue for three to six months. Maintaining a stable weight protects your result.",
+  heroImage: {
+    label: "HERO PHOTO",
+    caption:
+      "Modern, private body-contouring treatment room with clean clinical lines and calm lighting. Professional and reassuring. No patient visible.",
+  },
+  bodyImage: {
+    label: "TREATMENT PHOTO",
+    caption:
+      "Healthy torso silhouette in profile under soft directional light - smooth contour, no marks or device visible. Suggests refined body contour, not a before-and-after.",
+  },
+  faq: [
+    {
+      q: "Is liposuction a weight-loss procedure?",
+      a: "No. Liposuction contours specific areas. Patients near a stable goal weight see the most natural, lasting results. Medical weight loss is a separate conversation if overall weight is the primary concern.",
+    },
+    {
+      q: "How is this different from BodyTite?",
+      a: "Liposuction focuses on removing fat. BodyTite adds radiofrequency energy for simultaneous skin tightening. Your provider may recommend one, the other, or a combined plan based on fat volume and skin laxity.",
+    },
+    {
+      q: "Will the fat come back?",
+      a: "Fat cells removed from a treated area do not return. Remaining fat cells in the body can still enlarge with weight gain, so stable habits matter after the procedure.",
+    },
+    {
+      q: "What areas can be treated?",
+      a: "Common areas include the abdomen, flanks, inner and outer thighs, arms, back, and submental (chin) region. Candidacy and combination of areas are determined at consultation.",
+    },
+    {
+      q: "How much downtime should I plan for?",
+      a: "Most patients plan several days of reduced activity and compression garment wear for weeks. Your provider outlines a specific timeline based on the areas treated.",
+    },
+  ],
+};
+
 const quantum: ServiceDefinition = {
   category: "body",
   slug: "quantum",
@@ -1517,7 +1517,7 @@ const emsculptNeo: ServiceDefinition = {
 };
 
 const emsella: ServiceDefinition = {
-  category: "body",
+  category: "wellness",
   slug: "emsella",
   name: "Emsella",
   metaDescription:
@@ -2360,6 +2360,86 @@ const b12MicInjections: ServiceDefinition = {
   ],
 };
 
+const shockwaveSexualHealth: ServiceDefinition = {
+  category: "wellness",
+  slug: "shockwave-sexual-health",
+  name: "Shockwave — Sexual Health",
+  metaDescription:
+    "Shockwave therapy for sexual health in Elkhorn, WI. Non-invasive acoustic wave treatment for intimate wellness at Elemental Skin & Body.",
+  heroDescription:
+    "Intimate concerns are common-and they are medical, not something you have to work around in silence. Acoustic shockwave therapy is a non-invasive option for sexual health, discussed privately and planned around your goals.",
+  whatIsIt: [
+    "Sexual-health shockwave therapy delivers focused acoustic pulses to intimate tissue to support circulation, tissue quality, and nerve signaling. Sessions are performed in a private clinical setting with no incisions, injections, or systemic medications.",
+    `At ${BRAND}, this protocol is used as part of intimate wellness care for appropriate candidates-often alongside or as an alternative to regenerative options such as the P-Shot or O-Shot. Your provider confirms whether shockwave is the right tool for your symptoms, or whether another path fits better.`,
+  ],
+  howItWorks: [
+    "Private consultation covering symptoms, medical history, medications, and goals-including any prior treatments for sexual function.",
+    "Treatment area prepared; coupling gel applied. The applicator delivers calibrated acoustic pulses at settings chosen for comfort and indication.",
+    "Session typically lasts 15–30 minutes. Intensity is adjusted throughout so the experience stays tolerable.",
+    "A series is usually recommended; your provider outlines session count, spacing, and whether pairing with other intimate-wellness treatments would help.",
+  ],
+  benefits: [
+    "Non-invasive-no needles, incisions, or downtime for most patients",
+    "Supports circulation and tissue quality in intimate treatment areas",
+    "Private, clinical setting designed for comfort and confidentiality",
+    "Can complement P-Shot, O-Shot, or Emsella when a combined plan makes sense",
+    "Short visits that fit into a regular schedule",
+  ],
+  candidate:
+    "Adults with sexual-function or intimate-wellness concerns who have been evaluated by a provider. Shockwave is not a substitute for a full medical workup of erectile dysfunction, pelvic pain, or hormonal issues. Certain implants, infections, and medical conditions are contraindications-reviewed at consultation.",
+  expectBefore:
+    "Arrive without lotions or oils on the treatment area. Share medications, implants, and relevant history at consultation so the protocol is safe. No special fasting is typically required.",
+  expectDuring:
+    "You remain comfortably positioned while the applicator delivers rhythmic acoustic pulses. Sensation ranges from mild pressure to more intense tapping depending on settings. Intensity can be adjusted at any time.",
+  expectAfter:
+    "Mild temporary soreness or warmth in the treated area can occur. Most patients resume normal daily activity immediately. Your provider reviews any short-term intimacy or activity notes for your specific plan.",
+  atAGlance: [
+    "Visit: 15–30 min",
+    "Series: typically 6 sessions",
+    "Best for: intimate wellness, circulation support",
+  ],
+  goodFitIf: [
+    "You want a non-invasive option for sexual health discussed in a private, clinical setting",
+    "You have noticed changes in function, sensitivity, or confidence and want a medical evaluation-not a retail gadget",
+    "You are exploring shockwave on its own or as part of a plan with the P-Shot, O-Shot, or Emsella",
+    "You prefer short visits with little to no downtime",
+  ],
+  visitAndResults:
+    "A typical plan is a series of sessions over several weeks. Response is individual; your provider outlines realistic expectations at consultation rather than promising a single-visit change.",
+  heroImage: {
+    label: "HERO PHOTO",
+    caption:
+      "Private, professionally appointed consultation room - clean, neutral, and discreet. Warm lighting. Conveys confidentiality and clinical professionalism. No patient visible.",
+  },
+  bodyImage: {
+    label: "TREATMENT PHOTO",
+    caption:
+      "Shockwave device handpiece on a clean treatment table in a private clinical setting - professional and precise. No patient visible.",
+  },
+  faq: [
+    {
+      q: "Is this the same as the shockwave used for joints or sports injuries?",
+      a: "The platform uses acoustic energy, but sexual-health protocols use different settings, treatment maps, and visit plans than musculoskeletal shockwave. Your provider selects the protocol that matches your concern.",
+    },
+    {
+      q: "Is the visit private?",
+      a: "Yes. Consultation and treatment are handled in a private clinical setting. Encounters are confidential.",
+    },
+    {
+      q: "Can this be combined with the P-Shot or O-Shot?",
+      a: "Often yes. Shockwave supports circulation and tissue quality, while PRP treatments add a regenerative injection. Sequencing is planned at consultation.",
+    },
+    {
+      q: "Does it hurt?",
+      a: "Most patients describe rhythmic pressure rather than sharp pain. Intensity is increased gradually and can be lowered at any point.",
+    },
+    {
+      q: "How many sessions will I need?",
+      a: "Many intimate-wellness protocols use a series of about six sessions. Your provider confirms the plan based on your goals and response.",
+    },
+  ],
+};
+
 // ─────────────────────────────────────────────────────────────────────────────
 // REGISTRY EXPORT
 // ─────────────────────────────────────────────────────────────────────────────
@@ -2369,11 +2449,10 @@ export const services: ServiceDefinition[] = [
   botoxJeuveau,
   dermalFillers,
   biofill,
-  vampireFacial,
   vampireFacelift,
   // Skin & laser
   diamondGlow,
-  elementalFacial,
+  vampireFacial,
   dermaplaning,
   chemicalPeels,
   hyfrecator,
@@ -2384,9 +2463,9 @@ export const services: ServiceDefinition[] = [
   laserHairRemoval,
   faceTite,
   bodytite,
+  liposuction,
   quantum,
   emsculptNeo,
-  emsella,
   shockwave,
   // Wellness
   medicalWeightLoss,
@@ -2395,6 +2474,8 @@ export const services: ServiceDefinition[] = [
   prpJointInjections,
   oShot,
   pShot,
+  emsella,
+  shockwaveSexualHealth,
   ivTherapiesPeptides,
   b12MicInjections,
 ];
